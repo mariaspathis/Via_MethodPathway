@@ -1,33 +1,18 @@
-# Via Method Mapping — Gmail/Vercel version
+# Via Method Mapping — Vercel Logs version
 
-This version sends consented Via Method responses directly through the existing Gmail / Google Workspace account. Resend is not used.
+This version does not send email and does not require Gmail, Resend, passwords or API keys.
 
-## Files
-- `index.html` — the reflection tool
-- `api/send-response.js` — Vercel serverless function that emails responses through Gmail
-- `package.json` — installs Nodemailer
+## How submissions are recorded
+When a client chooses **Yes, save my response** and submits, the browser sends the 48 answers to `/api/record-response`. The Vercel Function recalculates the two map scores and pathway, then writes one structured `VIA_RESPONSE` entry to Vercel Runtime Logs.
 
-## Vercel environment variables
-Add these under **Project → Settings → Environment Variables**:
+## Where to view submissions
+1. Open the Vercel dashboard and select this project.
+2. Open **Logs**.
+3. Search for `VIA_RESPONSE`.
+4. Open an entry to view the timestamp, pathway, scores, optional contact details, and all 48 numeric responses.
 
-- `GMAIL_USER` = `contact@spathiswellbeing.com`
-- `GMAIL_APP_PASSWORD` = the 16-character Google App Password created for this integration
+## Important
+Vercel Runtime Logs are operational logs, not a permanent client-record database. Availability and retention depend on Vercel's current logging plan/settings. Export anything you need to retain.
 
-Do not use the normal Gmail password and do not place either value in GitHub or `index.html`.
-
-After adding or changing environment variables, redeploy the Vercel project.
-
-## Google requirement
-Google App Passwords require 2-Step Verification to be enabled. If the App Password option is unavailable on a managed Google Workspace account, the Workspace administrator may need to allow it, or Gmail OAuth 2.0 can be used instead.
-
-## Email flow
-Client consents and submits → `/api/send-response` → Gmail SMTP → `contact@spathiswellbeing.com`.
-
-If the client supplies an email address, the received email uses that address as Reply-To so replying from Gmail goes back to the client.
-
-## Pathway logic
-- Support Map >= 36 → Grounded Support
-- Support Map < 36 and Identity Map >= 36 → The Unfolding
-- Support Map < 36 and Identity Map < 36 → The Way Forward
-
-The server recalculates the scores and pathway from all 48 submitted responses before sending the email.
+## Deployment
+Upload all files to the GitHub repository connected to Vercel. Ensure the `api/record-response.js` file is present at the repository root under `api/`. Vercel will redeploy from GitHub. No environment variables are required.

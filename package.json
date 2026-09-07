@@ -2,8 +2,5 @@
   "name": "spathis-via-method-mapping",
   "version": "1.0.0",
   "private": true,
-  "description": "Via Method Mapping reflection tool for Spathis Wellbeing with a Vercel serverless Gmail email endpoint for quiz responses.",
-  "dependencies": {
-    "nodemailer": "^7.0.6"
-  }
+  "description": "Via Method Mapping reflection tool for Spathis Wellbeing. Submissions are recorded to Vercel Runtime Logs; no email service is used."
 }

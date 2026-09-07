@@ -287,7 +287,7 @@
     <div class="consent">
       <p><b>Sharing your response</b><br>Do you consent for your response to be shared with Spathis Wellbeing to help us understand your current needs and how best to support you? <span class="req">*</span></p>
       <div class="radio-row">
-        <label><input type="radio" name="consent" value="yes"> Yes, send my response</label>
+        <label><input type="radio" name="consent" value="yes"> Yes, save my response</label>
         <label><input type="radio" name="consent" value="no"> Discard my response</label>
       </div>
       <p class="err-msg" id="consent-err">Please choose one of the options above.</p>
@@ -302,7 +302,7 @@
   <section class="screen" id="screen-confirm">
     <div class="confirm">
       <h2 id="confirm-heading">Thank you</h2>
-      <p id="confirm-body">Your response has been sent to contact@spathiswellbeing.com.</p>
+      <p id="confirm-body">Your response has been saved with Spathis Wellbeing.</p>
     </div>
   </section>
 
@@ -650,10 +650,10 @@ async function submitForm(){
   };
 
   submitBtn.disabled = true;
-  submitBtn.textContent = 'Sending…';
+  submitBtn.textContent = 'Saving…';
 
   try {
-    const response = await fetch('/api/send-response', {
+    const response = await fetch('/api/record-response', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(payload)
@@ -661,15 +661,15 @@ async function submitForm(){
 
     if(!response.ok){
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || 'Unable to send response');
+      throw new Error(errorData.error || 'Unable to save response');
     }
 
     heading.textContent = 'Thank you';
-    body.textContent = 'Your response has been sent to Spathis Wellbeing.';
+    body.textContent = 'Your response has been saved with Spathis Wellbeing.';
     goTo('confirm');
   } catch (error) {
-    console.error('Response email failed:', error);
-    alert('Your response could not be sent right now. Please try again or contact Spathis Wellbeing directly at contact@spathiswellbeing.com.');
+    console.error('Response save failed:', error);
+    alert('Your response could not be saved right now. Please try again.');
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = 'Submit';
