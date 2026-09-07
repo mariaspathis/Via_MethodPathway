@@ -1,36 +1,33 @@
-# Via Method Mapping — Spathis Wellbeing
+# Via Method Mapping — Gmail/Vercel version
 
-Static Via Method Mapping quiz with a Vercel serverless email endpoint.
+This version sends consented Via Method responses directly through the existing Gmail / Google Workspace account. Resend is not used.
 
 ## Files
+- `index.html` — the reflection tool
+- `api/send-response.js` — Vercel serverless function that emails responses through Gmail
+- `package.json` — installs Nodemailer
 
-- `index.html` — quiz, scoring and pathway recommendation display
-- `api/send-response.js` — sends consented quiz responses by email
-- `package.json` — project metadata
-- `.gitignore`
+## Vercel environment variables
+Add these under **Project → Settings → Environment Variables**:
+
+- `GMAIL_USER` = `contact@spathiswellbeing.com`
+- `GMAIL_APP_PASSWORD` = the 16-character Google App Password created for this integration
+
+Do not use the normal Gmail password and do not place either value in GitHub or `index.html`.
+
+After adding or changing environment variables, redeploy the Vercel project.
+
+## Google requirement
+Google App Passwords require 2-Step Verification to be enabled. If the App Password option is unavailable on a managed Google Workspace account, the Workspace administrator may need to allow it, or Gmail OAuth 2.0 can be used instead.
+
+## Email flow
+Client consents and submits → `/api/send-response` → Gmail SMTP → `contact@spathiswellbeing.com`.
+
+If the client supplies an email address, the received email uses that address as Reply-To so replying from Gmail goes back to the client.
 
 ## Pathway logic
+- Support Map >= 36 → Grounded Support
+- Support Map < 36 and Identity Map >= 36 → The Unfolding
+- Support Map < 36 and Identity Map < 36 → The Way Forward
 
-- Grounded Support: Support Map score >= 36
-- The Unfolding: Support Map score < 36 AND Identity Map score >= 36
-- The Way Forward: Support Map score < 36 AND Identity Map score < 36
-
-## Email destination
-
-All consented quiz response emails are sent to:
-
-`contact@spathiswellbeing.com`
-
-The email contains the recommended pathway, Support Map score, Identity Map score, optional contact details, and all 48 numeric responses.
-
-## Vercel setup
-
-1. Upload this project to GitHub and import the repository into Vercel.
-2. Create a Resend account/integration and obtain an API key.
-3. In Vercel, open **Project → Settings → Environment Variables**.
-4. Add `RESEND_API_KEY` with your Resend API key.
-5. Recommended for production: verify `spathiswellbeing.com` in Resend, then add:
-   `EMAIL_FROM=Via Method <responses@spathiswellbeing.com>`
-6. Redeploy the Vercel project after adding or changing environment variables.
-
-The API key must never be placed in `index.html` or committed to GitHub.
+The server recalculates the scores and pathway from all 48 submitted responses before sending the email.

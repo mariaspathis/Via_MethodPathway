@@ -1,17 +1,9 @@
-# Via Method Mapping — build notes
+# Via Method Mapping — deployment notes
 
-## Current configuration
-
-- 48 questions across Support Map and Identity Map.
-- Response scale: 0–3.
-- Pathway thresholds are implemented at 36 points.
-- All consented submissions call `/api/send-response`.
-- Responses are sent to `contact@spathiswellbeing.com`.
-- If a person selects "Discard my response", no email request is made.
-- The response email includes pathway, both map scores, optional contact details, and all numeric answers.
-
-## Required Vercel environment variable
-
-`RESEND_API_KEY`
-
-For a branded production sender, also configure `EMAIL_FROM` after verifying the Spathis Wellbeing domain with the email provider.
+- Resend has been removed.
+- Consented submissions call `/api/send-response`.
+- The Vercel function sends through Gmail/Google Workspace using Nodemailer.
+- Required Vercel variables: `GMAIL_USER` and `GMAIL_APP_PASSWORD`.
+- Never commit the Gmail App Password to GitHub.
+- Client-facing wording uses “response” rather than “result/results.”
+- The server validates all 48 answers and recalculates the pathway before emailing.

@@ -1,106 +1,124 @@
+const nodemailer = require('nodemailer');
+
 const RESPONSE_RECIPIENT = 'contact@spathiswellbeing.com';
+
+const pathwayNames = {
+  grounded: 'Grounded Support',
+  unfolding: 'The Unfolding',
+  wayforward: 'The Way Forward'
+};
 
 function escapeHtml(value = '') {
   return String(value)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
-function pathwayName(key) {
-  return {
-    grounded: 'Grounded Support',
-    unfolding: 'The Unfolding',
-    wayforward: 'The Way Forward'
-  }[key] || 'Unknown';
+function validAnswers(values) {
+  return Array.isArray(values) &&
+    values.length === 24 &&
+    values.every((value) => Number.isInteger(Number(value)) && Number(value) >= 0 && Number(value) <= 3);
 }
 
-function answerRows(answers = [], prefix) {
-  return answers.map((answer, index) =>
-    `<tr><td style="padding:4px 10px;border-bottom:1px solid #eee;">${prefix} ${index + 1}</td><td style="padding:4px 10px;border-bottom:1px solid #eee;">${escapeHtml(answer)}</td></tr>`
-  ).join('');
+function total(values) {
+  return values.reduce((sum, value) => sum + Number(value), 0);
 }
 
-export default async function handler(req, res) {
+function determinePathway(supportMapScore, identityMapScore) {
+  if (supportMapScore >= 36) return 'grounded';
+  if (identityMapScore >= 36) return 'unfolding';
+  return 'wayforward';
+}
+
+function answerRows(title, answers) {
+  const rows = answers
+    .map((answer, index) => `<tr><td style="padding:5px 10px;border-bottom:1px solid #eee;">${index + 1}</td><td style="padding:5px 10px;border-bottom:1px solid #eee;">${escapeHtml(answer)}</td></tr>`)
+    .join('');
+
+  return `
+    <h3 style="margin:24px 0 8px;">${escapeHtml(title)}</h3>
+    <table style="border-collapse:collapse;width:100%;max-width:520px;">
+      <thead><tr><th style="text-align:left;padding:5px 10px;border-bottom:1px solid #ccc;">Question</th><th style="text-align:left;padding:5px 10px;border-bottom:1px solid #ccc;">Response</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ error: 'Method not allowed.' });
   }
 
-  if (!process.env.RESEND_API_KEY) {
-    return res.status(500).json({ error: 'Email service is not configured' });
+  const gmailUser = process.env.GMAIL_USER;
+  const gmailAppPassword = process.env.GMAIL_APP_PASSWORD;
+
+  if (!gmailUser || !gmailAppPassword) {
+    console.error('Missing GMAIL_USER or GMAIL_APP_PASSWORD environment variable.');
+    return res.status(500).json({ error: 'Email service is not configured.' });
   }
-
-  const {
-    name = '', email = '', phone = '', consent,
-    pathway, supportMapScore, identityMapScore,
-    part1Answers = [], part2Answers = []
-  } = req.body || {};
-
-  if (consent !== 'yes') {
-    return res.status(400).json({ error: 'Consent is required to send a response' });
-  }
-
-  if (!['grounded', 'unfolding', 'wayforward'].includes(pathway)) {
-    return res.status(400).json({ error: 'Invalid pathway recommendation' });
-  }
-
-  const safeName = escapeHtml(name || 'Not provided');
-  const safeEmail = escapeHtml(email || 'Not provided');
-  const safePhone = escapeHtml(phone || 'Not provided');
-  const pathwayRecommendation = pathwayName(pathway);
-
-  const html = `
-    <div style="font-family:Arial,Helvetica,sans-serif;color:#1B1B1A;line-height:1.5;max-width:720px;margin:auto;">
-      <h2 style="font-weight:500;">New Via Method Mapping response</h2>
-      <p><strong>Recommended pathway:</strong> ${escapeHtml(pathwayRecommendation)}</p>
-      <p><strong>Support Map score:</strong> ${escapeHtml(supportMapScore)}<br>
-      <strong>Identity Map score:</strong> ${escapeHtml(identityMapScore)}</p>
-
-      <h3>Contact details</h3>
-      <p><strong>Name:</strong> ${safeName}<br>
-      <strong>Email:</strong> ${safeEmail}<br>
-      <strong>Phone:</strong> ${safePhone}</p>
-
-      <h3>Responses</h3>
-      <table style="border-collapse:collapse;width:100%;font-size:14px;">
-        <thead><tr><th style="text-align:left;padding:6px 10px;border-bottom:2px solid #ddd;">Question</th><th style="text-align:left;padding:6px 10px;border-bottom:2px solid #ddd;">Response</th></tr></thead>
-        <tbody>
-          ${answerRows(part1Answers, 'Support Map')}
-          ${answerRows(part2Answers, 'Identity Map')}
-        </tbody>
-      </table>
-    </div>`;
-
-  const fromAddress = process.env.EMAIL_FROM || 'Via Method <onboarding@resend.dev>';
 
   try {
-    const response = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        from: fromAddress,
-        to: [RESPONSE_RECIPIENT],
-        reply_to: email || RESPONSE_RECIPIENT,
-        subject: `Via Method response — ${pathwayRecommendation}${name ? ` — ${name}` : ''}`,
-        html
-      })
-    });
+    const body = req.body || {};
 
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) {
-      console.error('Resend error:', data);
-      return res.status(502).json({ error: 'Email provider rejected the request' });
+    if (body.consent !== 'yes') {
+      return res.status(400).json({ error: 'Consent is required before a response can be emailed.' });
     }
 
-    return res.status(200).json({ ok: true, id: data.id });
+    if (!validAnswers(body.part1Answers) || !validAnswers(body.part2Answers)) {
+      return res.status(400).json({ error: 'The submitted response is incomplete or invalid.' });
+    }
+
+    // Recalculate everything on the server so the emailed pathway cannot be altered in the browser.
+    const supportMapScore = total(body.part1Answers);
+    const identityMapScore = total(body.part2Answers);
+    const pathway = determinePathway(supportMapScore, identityMapScore);
+    const pathwayName = pathwayNames[pathway];
+
+    const name = String(body.name || '').trim();
+    const email = String(body.email || '').trim();
+    const phone = String(body.phone || '').trim();
+
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: gmailUser,
+        pass: gmailAppPassword
+      }
+    });
+
+    const html = `
+      <div style="font-family:Arial,Helvetica,sans-serif;line-height:1.5;color:#222;">
+        <h2>Via Method response</h2>
+        <p><strong>Suggested pathway:</strong> ${escapeHtml(pathwayName)}</p>
+        <p><strong>Support Map response:</strong> ${supportMapScore}</p>
+        <p><strong>Identity Map response:</strong> ${identityMapScore}</p>
+        <hr style="border:none;border-top:1px solid #ddd;margin:20px 0;">
+        <p><strong>Name:</strong> ${escapeHtml(name || 'Not provided')}</p>
+        <p><strong>Email:</strong> ${escapeHtml(email || 'Not provided')}</p>
+        <p><strong>Phone:</strong> ${escapeHtml(phone || 'Not provided')}</p>
+        ${answerRows('Support Map responses', body.part1Answers)}
+        ${answerRows('Identity Map responses', body.part2Answers)}
+      </div>`;
+
+    const mailOptions = {
+      from: `Via Method <${gmailUser}>`,
+      to: RESPONSE_RECIPIENT,
+      subject: `Via Method response — ${pathwayName}${name ? ` — ${name}` : ''}`,
+      html
+    };
+
+    // If the client supplied an email, Reply in Gmail will go back to them.
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      mailOptions.replyTo = email;
+    }
+
+    await transporter.sendMail(mailOptions);
+    return res.status(200).json({ ok: true });
   } catch (error) {
-    console.error('Email send failed:', error);
-    return res.status(500).json({ error: 'Unable to send response email' });
+    console.error('Gmail send-response error:', error);
+    return res.status(500).json({ error: 'The response could not be emailed.' });
   }
-}
+};
