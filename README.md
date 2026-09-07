@@ -4,12 +4,12 @@ Static Via Method Mapping quiz with a Vercel serverless email endpoint.
 
 ## Files
 
-- `index.html` — quiz, scoring and result display
-- `api/send-results.js` — sends consented quiz results by email
+- `index.html` — quiz, scoring and pathway recommendation display
+- `api/send-response.js` — sends consented quiz responses by email
 - `package.json` — project metadata
 - `.gitignore`
 
-## Result logic
+## Pathway logic
 
 - Grounded Support: Support Map score >= 36
 - The Unfolding: Support Map score < 36 AND Identity Map score >= 36
@@ -17,7 +17,7 @@ Static Via Method Mapping quiz with a Vercel serverless email endpoint.
 
 ## Email destination
 
-All consented quiz result emails are sent to:
+All consented quiz response emails are sent to:
 
 `contact@spathiswellbeing.com`
 
@@ -30,7 +30,7 @@ The email contains the recommended pathway, Support Map score, Identity Map scor
 3. In Vercel, open **Project → Settings → Environment Variables**.
 4. Add `RESEND_API_KEY` with your Resend API key.
 5. Recommended for production: verify `spathiswellbeing.com` in Resend, then add:
-   `EMAIL_FROM=Via Method <results@spathiswellbeing.com>`
+   `EMAIL_FROM=Via Method <responses@spathiswellbeing.com>`
 6. Redeploy the Vercel project after adding or changing environment variables.
 
 The API key must never be placed in `index.html` or committed to GitHub.

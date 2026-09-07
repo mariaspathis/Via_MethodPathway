@@ -2,5 +2,5 @@
   "name": "spathis-via-method-mapping",
   "version": "1.0.0",
   "private": true,
-  "description": "Via Method Mapping reflection tool for Spathis Wellbeing with a Vercel serverless email endpoint for quiz results."
+  "description": "Via Method Mapping reflection tool for Spathis Wellbeing with a Vercel serverless email endpoint for quiz responses."
 }

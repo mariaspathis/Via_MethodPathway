@@ -5,10 +5,10 @@
 - 48 questions across Support Map and Identity Map.
 - Response scale: 0–3.
 - Pathway thresholds are implemented at 36 points.
-- All consented submissions call `/api/send-results`.
-- Results are sent to `contact@spathiswellbeing.com`.
+- All consented submissions call `/api/send-response`.
+- Responses are sent to `contact@spathiswellbeing.com`.
 - If a person selects "Discard my response", no email request is made.
-- The results email includes pathway, both map scores, optional contact details, and all numeric answers.
+- The response email includes pathway, both map scores, optional contact details, and all numeric answers.
 
 ## Required Vercel environment variable
 

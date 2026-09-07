@@ -137,7 +137,7 @@
   }
   .err-msg.show{display:block;}
 
-  .results-tag{
+  .response-tag{
     display:inline-flex;align-items:center;gap:6px;font-size:11.5px;letter-spacing:.05em;
     text-transform:uppercase;background:var(--sage);color:#3E5A34;padding:5px 11px;
     border-radius:20px;font-weight:600;margin-bottom:18px;
@@ -263,11 +263,11 @@
     </div>
   </section>
 
-  <section class="screen" id="screen-results">
+  <section class="screen" id="screen-response">
     <h2 class="part-title" style="margin-top:26px;">Your Via direction</h2>
     <p class="part-sub">Here is your suggested starting point based on the nature of what you are carrying right now.</p>
 
-    <div id="results-tag-wrap"></div>
+    <div id="response-tag-wrap"></div>
     <div class="pathway-card" id="pathway-card"></div>
 
     <h3 style="font-family:var(--serif);font-weight:500;font-size:19px;margin:0 0 14px;">Contact details (optional)</h3>
@@ -287,7 +287,7 @@
     <div class="consent">
       <p><b>Sharing your response</b><br>Do you consent for your response to be shared with Spathis Wellbeing to help us understand your current needs and how best to support you? <span class="req">*</span></p>
       <div class="radio-row">
-        <label><input type="radio" name="consent" value="yes"> Yes, send my results</label>
+        <label><input type="radio" name="consent" value="yes"> Yes, send my response</label>
         <label><input type="radio" name="consent" value="no"> Discard my response</label>
       </div>
       <p class="err-msg" id="consent-err">Please choose one of the options above.</p>
@@ -302,7 +302,7 @@
   <section class="screen" id="screen-confirm">
     <div class="confirm">
       <h2 id="confirm-heading">Thank you</h2>
-      <p id="confirm-body">Your results have been sent to contact@spathiswellbeing.com.</p>
+      <p id="confirm-body">Your response has been sent to contact@spathiswellbeing.com.</p>
     </div>
   </section>
 
@@ -463,7 +463,7 @@ function showSection(prefix, idx){
     Math.round((idx/SECTIONS_PER_PART)*100) + '%';
   const nextBtn = document.getElementById(prefix+'-next-btn');
   if(idx === SECTIONS_PER_PART - 1){
-    nextBtn.textContent = prefix === 'p1' ? 'Continue to part two' : 'See your results';
+    nextBtn.textContent = prefix === 'p1' ? 'Continue to part two' : 'See your response';
   } else {
     nextBtn.textContent = 'Next';
   }
@@ -538,8 +538,8 @@ function nextP2(){
     showSection('p2', p2Section);
     window.scrollTo({top:0, behavior:'smooth'});
   } else {
-    computeResults();
-    goTo('results');
+    computeResponse();
+    goTo('response');
   }
 }
 
@@ -588,7 +588,7 @@ function computePathway(p1, p2){
   return 'wayforward';
 }
 
-function computeResults(){
+function computeResponse(){
   const p1 = getAnswers('p1', 24);
   const p2 = getAnswers('p2', 24);
   const key = computePathway(p1, p2);
@@ -599,8 +599,8 @@ function computeResults(){
   window.__supportMapScore = sum(p1);
   window.__identityMapScore = sum(p2);
 
-  const tagWrap = document.getElementById('results-tag-wrap');
-  tagWrap.innerHTML = `<span class="results-tag">Your suggested pathway</span>`;
+  const tagWrap = document.getElementById('response-tag-wrap');
+  tagWrap.innerHTML = `<span class="response-tag">Your suggested pathway</span>`;
 
   const card = document.getElementById('pathway-card');
   card.innerHTML = `
@@ -612,7 +612,7 @@ function computeResults(){
       <a href="https://clientportal.zandahealth.com/clientportal/spathiswellbeing" target="_blank" rel="noopener">Book a session</a>
       or <a href="https://www.spathiswellbeing.com/contact" target="_blank" rel="noopener">contact us</a>.
     </p>
-    <p style="font-size:12.5px;color:var(--ink-soft);margin-top:14px;">Pathway result: ${pw.name}</p>
+    <p style="font-size:12.5px;color:var(--ink-soft);margin-top:14px;">Pathway recommendation: ${pw.name}</p>
   `;
 }
 
@@ -653,7 +653,7 @@ async function submitForm(){
   submitBtn.textContent = 'Sending…';
 
   try {
-    const response = await fetch('/api/send-results', {
+    const response = await fetch('/api/send-response', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(payload)
@@ -661,15 +661,15 @@ async function submitForm(){
 
     if(!response.ok){
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || 'Unable to send results');
+      throw new Error(errorData.error || 'Unable to send response');
     }
 
     heading.textContent = 'Thank you';
-    body.textContent = 'Your results have been sent to Spathis Wellbeing.';
+    body.textContent = 'Your response has been sent to Spathis Wellbeing.';
     goTo('confirm');
   } catch (error) {
-    console.error('Result email failed:', error);
-    alert('Your results could not be sent right now. Please try again or contact Spathis Wellbeing directly at contact@spathiswellbeing.com.');
+    console.error('Response email failed:', error);
+    alert('Your response could not be sent right now. Please try again or contact Spathis Wellbeing directly at contact@spathiswellbeing.com.');
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = 'Submit';
