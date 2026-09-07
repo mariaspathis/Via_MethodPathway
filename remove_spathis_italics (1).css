@@ -1,0 +1,30 @@
+/*
+ * Removes italic styling from the "Spathis" logo/text in the top-left header.
+ *
+ * HOW TO USE:
+ * 1. Open your repo and find the CSS file that styles the header/logo
+ *    (often named something like styles.css, globals.css, or header.module.css).
+ * 2. Paste the rules below into that file.
+ * 3. If none of the selectors below match your actual markup, right-click
+ *    the "Spathis" text on your live site -> "Inspect" -> copy the class
+ *    or id shown in the dev tools, and replace the selector with that.
+ */
+
+/* Try the most common patterns first */
+.logo,
+.site-logo,
+.header-logo,
+.brand,
+.brand-name,
+#logo,
+#site-title,
+header .title,
+header h1 {
+  font-style: normal !important;
+}
+
+/* Fallback: target by visible text content (works in some frameworks
+   via a wrapping span you may need to add, e.g. <span class="logo-text">Spathis</span>) */
+.logo-text {
+  font-style: normal !important;
+}
