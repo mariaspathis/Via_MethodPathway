@@ -270,41 +270,18 @@
     <div id="response-tag-wrap"></div>
     <div class="pathway-card" id="pathway-card"></div>
 
-    <h3 style="font-family:var(--serif);font-weight:500;font-size:19px;margin:0 0 14px;">Contact details (optional)</h3>
-    <div class="form-field">
-      <label for="f-name">Name</label>
-      <input type="text" id="f-name" placeholder="First and last name">
-    </div>
-    <div class="form-field">
-      <label for="f-email">Email</label>
-      <input type="email" id="f-email" placeholder="Your email address">
-    </div>
-    <div class="form-field">
-      <label for="f-phone">Phone number</label>
-      <input type="tel" id="f-phone" placeholder="Your phone number">
+    <div class="consent" style="margin-top:28px;">
+      <p><b>What would you like to do next?</b><br>Your pathway is yours to keep. Nothing is automatically sent to Spathis Wellbeing.</p>
     </div>
 
-    <div class="consent">
-      <p><b>Sharing your response</b><br>Do you consent for your response to be shared with Spathis Wellbeing to help us understand your current needs and how best to support you? <span class="req">*</span></p>
-      <div class="radio-row">
-        <label><input type="radio" name="consent" value="yes"> Yes, save my response</label>
-        <label><input type="radio" name="consent" value="no"> Discard my response</label>
-      </div>
-      <p class="err-msg" id="consent-err">Please choose one of the options above.</p>
-    </div>
-
-    <div class="actions">
+    <div class="actions" style="align-items:stretch;">
+      <button class="btn ghost" onclick="window.print()">Print / save my response</button>
+      <button class="btn primary" onclick="shareByEmail()">Share my response with Spathis Wellbeing</button>
+      <a class="btn ghost" href="https://clientportal.zandahealth.com/clientportal/spathiswellbeing" target="_blank" rel="noopener" style="text-align:center;">Book a conversation</a>
       <button class="btn ghost" onclick="goTo('part2')">Back</button>
-      <button class="btn primary" id="submit-btn" onclick="submitForm()">Submit</button>
     </div>
   </section>
 
-  <section class="screen" id="screen-confirm">
-    <div class="confirm">
-      <h2 id="confirm-heading">Thank you</h2>
-      <p id="confirm-body">Your response has been saved with Spathis Wellbeing.</p>
-    </div>
-  </section>
 
 </main>
 
@@ -616,64 +593,32 @@ function computeResponse(){
   `;
 }
 
-async function submitForm(){
-  const consent = document.querySelector('input[name="consent"]:checked');
-  const consentErr = document.getElementById('consent-err');
-  const submitBtn = document.getElementById('submit-btn');
+function shareByEmail(){
+  const key = window.__lastPathwayKey;
+  const p = PATHWAYS[key];
+  if(!p) return;
 
-  if(!consent){
-    consentErr.classList.add('show');
-    return;
-  }
-  consentErr.classList.remove('show');
+  const subject = 'My Via Method Reflection';
+  const body = [
+    'Hi Maria,',
+    '',
+    'I completed the Via Method reflection.',
+    '',
+    'My suggested starting point is ' + p.name + '.',
+    '',
+    'I would like to explore what support might be right for me.',
+    '',
+    'Name:',
+    'Phone:',
+    '',
+    'Thank you.'
+  ].join('\\n');
 
-  const heading = document.getElementById('confirm-heading');
-  const body = document.getElementById('confirm-body');
-
-  if(consent.value === 'no'){
-    heading.textContent = 'Thank you for reflecting';
-    body.textContent = 'Your response has not been shared or saved.';
-    goTo('confirm');
-    return;
-  }
-
-  const payload = {
-    name: document.getElementById('f-name').value.trim(),
-    email: document.getElementById('f-email').value.trim(),
-    phone: document.getElementById('f-phone').value.trim(),
-    consent: consent.value,
-    pathway: window.__lastPathwayKey,
-    supportMapScore: window.__supportMapScore,
-    identityMapScore: window.__identityMapScore,
-    part1Answers: window.__lastP1,
-    part2Answers: window.__lastP2
-  };
-
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'Saving…';
-
-  try {
-    const response = await fetch('/api/record-response', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(payload)
-    });
-
-    if(!response.ok){
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || 'Unable to save response');
-    }
-
-    heading.textContent = 'Thank you';
-    body.textContent = 'Your response has been saved with Spathis Wellbeing.';
-    goTo('confirm');
-  } catch (error) {
-    console.error('Response save failed:', error);
-    alert('Your response could not be saved right now. Please try again.');
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Submit';
-  }
+  window.location.href =
+    'mailto:contact@spathiswellbeing.com?subject=' +
+    encodeURIComponent(subject) +
+    '&body=' +
+    encodeURIComponent(body);
 }
 </script>
 

@@ -1,18 +1,19 @@
-# Via Method Mapping — Vercel Logs version
+# Via Method Mapping
 
-This version does not send email and does not require Gmail, Resend, passwords or API keys.
+This version does not automatically email, transmit, or save a client's reflection.
 
-## How submissions are recorded
-When a client chooses **Yes, save my response** and submits, the browser sends the 48 answers to `/api/record-response`. The Vercel Function recalculates the two map scores and pathway, then writes one structured `VIA_RESPONSE` entry to Vercel Runtime Logs.
-
-## Where to view submissions
-1. Open the Vercel dashboard and select this project.
-2. Open **Logs**.
-3. Search for `VIA_RESPONSE`.
-4. Open an entry to view the timestamp, pathway, scores, optional contact details, and all 48 numeric responses.
+## Client experience
+1. Complete the 48-statement reflection.
+2. See the suggested Via Method pathway immediately on screen.
+3. Choose to:
+   - Print / save the response using the browser's print dialog.
+   - Share the pathway with Spathis Wellbeing. This opens the client's own email app with a pre-written email addressed to contact@spathiswellbeing.com. The client must press Send themselves.
+   - Book a conversation.
 
 ## Important
-Vercel Runtime Logs are operational logs, not a permanent client-record database. Availability and retention depend on Vercel's current logging plan/settings. Export anything you need to retain.
+There is no Resend, Gmail SMTP, API key, App Password, Vercel email function, or Vercel response logging in this version.
+
+The Share button uses a `mailto:` link. Whether it opens successfully depends on the client having an email application or browser mail handler configured.
 
 ## Deployment
-Upload all files to the GitHub repository connected to Vercel. Ensure the `api/record-response.js` file is present at the repository root under `api/`. Vercel will redeploy from GitHub. No environment variables are required.
+Upload these files to the GitHub repository connected to Vercel. Remove any old `/api` email or logging files from the repository, then redeploy.

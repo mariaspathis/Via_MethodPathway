@@ -2,5 +2,5 @@
   "name": "spathis-via-method-mapping",
   "version": "1.0.0",
   "private": true,
-  "description": "Via Method Mapping reflection tool for Spathis Wellbeing. Submissions are recorded to Vercel Runtime Logs; no email service is used."
+  "description": "Via Method Mapping reflection tool with on-screen pathway guidance and client-controlled email sharing."
 }

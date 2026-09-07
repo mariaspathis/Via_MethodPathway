@@ -1,9 +1,10 @@
-Via Method Mapping — Vercel Logs build
+# Via Method — client-controlled sharing
 
-- No email sending.
-- No Resend.
-- No Gmail App Password.
-- No environment variables required.
-- Consented submissions are written to Vercel Runtime Logs under the marker VIA_RESPONSE.
-- Server recalculates Support Map score, Identity Map score, and pathway from the 48 submitted answers.
-- Consent = no means the response is not sent to the API and is not logged.
+- Automatic email delivery removed.
+- Vercel response logging removed.
+- No contact details or consent form are collected by the quiz.
+- Pathway appears immediately on screen.
+- Client can print/save the page.
+- Client can choose “Share my response with Spathis Wellbeing”; this opens their own email client with a pre-written message.
+- Client controls whether the message is actually sent.
+- Email contains the suggested pathway only, not all 48 answers.
