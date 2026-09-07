@@ -295,14 +295,14 @@
 
     <div class="actions">
       <button class="btn ghost" onclick="goTo('part2')">Back</button>
-      <button class="btn primary" onclick="submitForm()">Submit</button>
+      <button class="btn primary" id="submit-btn" onclick="submitForm()">Submit</button>
     </div>
   </section>
 
   <section class="screen" id="screen-confirm">
     <div class="confirm">
       <h2 id="confirm-heading">Thank you</h2>
-      <p id="confirm-body">Your results have been sent to Spathis Wellbeing.</p>
+      <p id="confirm-body">Your results have been sent to contact@spathiswellbeing.com.</p>
     </div>
   </section>
 
@@ -616,19 +616,31 @@ function computeResults(){
   `;
 }
 
-function submitForm(){
+async function submitForm(){
   const consent = document.querySelector('input[name="consent"]:checked');
   const consentErr = document.getElementById('consent-err');
+  const submitBtn = document.getElementById('submit-btn');
+
   if(!consent){
     consentErr.classList.add('show');
     return;
   }
   consentErr.classList.remove('show');
 
+  const heading = document.getElementById('confirm-heading');
+  const body = document.getElementById('confirm-body');
+
+  if(consent.value === 'no'){
+    heading.textContent = 'Thank you for reflecting';
+    body.textContent = 'Your response has not been shared or saved.';
+    goTo('confirm');
+    return;
+  }
+
   const payload = {
-    name: document.getElementById('f-name').value,
-    email: document.getElementById('f-email').value,
-    phone: document.getElementById('f-phone').value,
+    name: document.getElementById('f-name').value.trim(),
+    email: document.getElementById('f-email').value.trim(),
+    phone: document.getElementById('f-phone').value.trim(),
     consent: consent.value,
     pathway: window.__lastPathwayKey,
     supportMapScore: window.__supportMapScore,
@@ -636,18 +648,32 @@ function submitForm(){
     part1Answers: window.__lastP1,
     part2Answers: window.__lastP2
   };
-  console.log('Submission payload:', payload);
 
-  const heading = document.getElementById('confirm-heading');
-  const body = document.getElementById('confirm-body');
-  if(consent.value === 'yes'){
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending…';
+
+  try {
+    const response = await fetch('/api/send-results', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
+    });
+
+    if(!response.ok){
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || 'Unable to send results');
+    }
+
     heading.textContent = 'Thank you';
     body.textContent = 'Your results have been sent to Spathis Wellbeing.';
-  } else {
-    heading.textContent = 'Thank you for reflecting';
-    body.textContent = 'Your response has not been shared or saved.';
+    goTo('confirm');
+  } catch (error) {
+    console.error('Result email failed:', error);
+    alert('Your results could not be sent right now. Please try again or contact Spathis Wellbeing directly at contact@spathiswellbeing.com.');
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Submit';
   }
-  goTo('confirm');
 }
 </script>
 

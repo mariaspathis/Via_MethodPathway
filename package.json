@@ -1,6 +1,6 @@
 {
   "name": "spathis-via-method-mapping",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
-  "description": "Via Method Mapping reflection tool for Spathis Wellbeing \u2014 static site for GitHub and Vercel."
+  "description": "Via Method Mapping reflection tool for Spathis Wellbeing with a Vercel serverless email endpoint for quiz results."
 }

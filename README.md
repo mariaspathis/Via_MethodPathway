@@ -1,36 +1,36 @@
 # Via Method Mapping — Spathis Wellbeing
 
-A static, single-page Via Method reflection tool styled for Spathis Wellbeing. No framework or build step is required; the quiz runs from `index.html`.
+Static Via Method Mapping quiz with a Vercel serverless email endpoint.
 
 ## Files
 
-- `index.html` — complete 48-question quiz, pathway scoring, results screen and contact fields
-- `NOTES.md` — scoring logic and implementation notes
+- `index.html` — quiz, scoring and result display
+- `api/send-results.js` — sends consented quiz results by email
 - `package.json` — project metadata
+- `.gitignore`
 
-## Pathway scoring
+## Result logic
 
-- **Grounded Support:** Support Map score ≥ 36
-- **The Unfolding:** Support Map score < 36 and Identity Map score ≥ 36
-- **The Way Forward:** Support Map score < 36 and Identity Map score < 36
+- Grounded Support: Support Map score >= 36
+- The Unfolding: Support Map score < 36 AND Identity Map score >= 36
+- The Way Forward: Support Map score < 36 AND Identity Map score < 36
 
-## Upload to GitHub
+## Email destination
 
-1. Create a repository at GitHub.
-2. Upload `index.html`, `NOTES.md`, `README.md`, and `package.json`.
-3. Commit the files to `main`.
+All consented quiz result emails are sent to:
 
-## Connect GitHub to Vercel
+`contact@spathiswellbeing.com`
 
-1. In Vercel, choose **Add New → Project**.
-2. Import the GitHub repository.
-3. Use **Framework Preset: Other**.
-4. Leave the Build Command blank.
-5. Leave the Output Directory as the project root/default.
-6. Deploy.
+The email contains the recommended pathway, Support Map score, Identity Map score, optional contact details, and all 48 numeric responses.
 
-Every later push to the connected GitHub branch will trigger a new Vercel deployment automatically.
+## Vercel setup
 
-## Data submission
+1. Upload this project to GitHub and import the repository into Vercel.
+2. Create a Resend account/integration and obtain an API key.
+3. In Vercel, open **Project → Settings → Environment Variables**.
+4. Add `RESEND_API_KEY` with your Resend API key.
+5. Recommended for production: verify `spathiswellbeing.com` in Resend, then add:
+   `EMAIL_FROM=Via Method <results@spathiswellbeing.com>`
+6. Redeploy the Vercel project after adding or changing environment variables.
 
-The front-end currently prepares the response payload locally. If you want responses emailed or stored in Airtable/Google Sheets, add a Vercel serverless/API endpoint and connect `submitForm()` to it.
+The API key must never be placed in `index.html` or committed to GitHub.
