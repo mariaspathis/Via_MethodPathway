@@ -1,35 +1,38 @@
-# Via Method Mapping
+# Via Method Mapping — Clean final version
 
-This version does not automatically email, transmit, or save a client's reflection.
+This version has no automatic email sending and no Vercel response logging.
 
-## Client experience
-1. Complete the 48-statement reflection.
-2. See the suggested Via Method pathway immediately on screen.
-3. Choose **Share my pathway with Spathis Wellbeing** to open the client's own email app with a pre-written email addressed to contact@spathiswellbeing.com.
-4. The client must press Send themselves.
-5. The existing website contact button is labelled **Book a conversation**.
+## Final pathway screen
+After the client sees their suggested Via Method pathway, the only additional section is:
 
-## Important
-There is no Resend, Gmail SMTP, API key, App Password, Vercel email function, or Vercel response logging in this version.
+**Share your pathway with Spathis Wellbeing**
 
-The Share my pathway with Spathis Wellbeing button uses a `mailto:` link. Whether it opens successfully depends on the client having an email application or browser mail handler configured.
+The client is told that the button opens a pre-written email in their own email app. They can review it before choosing to send.
 
-## Remove the old API folder from GitHub
-Before redeploying, remove the old API email/logging code from your GitHub repository:
+Buttons:
+- Share my pathway with Spathis Wellbeing
+- Back
 
+The old section containing:
+- “What would you like to do next?”
+- “Print / save my response”
+- the coloured sharing button
+- the duplicate Book a conversation button
+
+has been removed.
+
+## Existing footer
+The website contact button is labelled **Book a conversation**.
+
+## Important GitHub cleanup
+Before redeploying:
 1. Open your GitHub repository.
-2. Click the `api` folder.
-3. Open the file inside it, such as `record-response.js` or `send-response.js`.
-4. Click the trash/bin icon, or use the `...` menu and choose **Delete file**.
-5. Click **Commit changes**.
-6. If there is more than one file inside `api`, delete each one.
-7. Once the last file is deleted, the empty `api` folder disappears automatically.
+2. Delete every file inside the old `api` folder.
+3. Commit the deletion.
+4. Delete/replace the old `index.html`.
+5. Upload the new `index.html` from this package.
+6. Commit the new files.
+7. Confirm the `api` folder is no longer visible in the repository.
+8. Vercel should redeploy automatically from GitHub.
 
-Your repository should then contain the main files such as:
-- `index.html`
-- `package.json`
-- `README.md`
-- `NOTES.md`
-
-## Deployment
-Upload/replace the files in the GitHub repository connected to Vercel, then let Vercel redeploy the latest commit.
+If Vercel still shows the old final screen, open Vercel → Deployments and make sure the newest deployment is the one marked Production.
