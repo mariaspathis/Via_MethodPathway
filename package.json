@@ -1,0 +1,6 @@
+{
+  "name": "spathis-via-method-mapping",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Via Method Mapping reflection tool for Spathis Wellbeing — static site, no build step. Serverless functions for email/Airtable-Sheets submission will live under /api once those integrations are confirmed."
+}
