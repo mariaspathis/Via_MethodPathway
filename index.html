@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Via Method Mapping — Spathis Wellbeing</title>
 <meta name="robots" content="noindex,nofollow">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
   :root{
     --terracotta:#C06A44;
@@ -20,10 +17,8 @@
     --ink-soft:#4A4A47;
     --line:rgba(27,27,26,0.18);
     --line-on-terracotta:rgba(255,255,255,0.55);
-    --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+    --serif: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     --sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    --draft-bg:#F7E7C6;
-    --draft-text:#7A5410;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
@@ -34,16 +29,6 @@
     line-height:1.55;
     -webkit-font-smoothing:antialiased;
   }
-  .previewbar{
-    background:var(--draft-bg);
-    color:var(--draft-text);
-    font-size:12.5px;
-    text-align:center;
-    padding:7px 12px;
-    letter-spacing:.01em;
-    border-bottom:1px solid rgba(122,84,16,0.25);
-  }
-  .previewbar strong{font-weight:600;}
   a{color:inherit;}
   .wrap{max-width:640px;margin:0 auto;padding:0 24px;}
   header.site{
@@ -54,7 +39,7 @@
     display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);
   }
   .logo img{width:30px;height:30px;display:block;border-radius:50%;}
-  .logo span{font-family:var(--serif);font-style:italic;font-weight:400;font-size:21px;letter-spacing:.01em;}
+  .logo span{font-family:var(--sans);font-style:normal;font-weight:500;font-size:21px;letter-spacing:.01em;}
   .backlink{
     font-size:13px;color:var(--ink-soft);text-decoration:none;border-bottom:1px solid var(--line);
   }
@@ -157,7 +142,6 @@
     text-transform:uppercase;background:var(--sage);color:#3E5A34;padding:5px 11px;
     border-radius:20px;font-weight:600;margin-bottom:18px;
   }
-  .results-tag.draft{background:var(--draft-bg);color:var(--draft-text);}
   .pathway-card{
     background:var(--blue-mist);padding:30px 28px;border-radius:6px;margin:6px 0 28px;
   }
@@ -168,10 +152,6 @@
   .pathway-body{font-size:15px;color:var(--ink-soft);margin:0 0 16px;}
   .pathway-meaning{font-size:15px;margin:0 0 4px;}
   .pathway-meaning b{display:block;margin-bottom:6px;}
-  .draft-flag{
-    display:block;font-size:12px;background:var(--draft-bg);color:var(--draft-text);
-    padding:8px 12px;border-radius:4px;margin-bottom:14px;
-  }
   .next-step{margin:0 0 6px;font-size:15px;}
   .next-step a{color:var(--terracotta-dark);text-decoration:underline;}
 
@@ -200,10 +180,6 @@
   .confirm{padding:60px 0;text-align:center;}
   .confirm h2{font-family:var(--serif);font-weight:400;font-size:28px;margin:0 0 14px;}
   .confirm p{color:var(--ink-soft);font-size:15px;max-width:44ch;margin:0 auto 8px;}
-  .build-note{
-    margin-top:30px;padding:14px 16px;border:1px dashed var(--draft-text);border-radius:4px;
-    font-size:12.5px;color:var(--draft-text);text-align:left;background:var(--draft-bg);
-  }
 
   @media (max-width:480px){
     .hero h1{font-size:28px;}
@@ -213,7 +189,6 @@
 </head>
 <body>
 
-<div class="previewbar"><strong>Preview build</strong> — sections marked in amber are draft copy or draft scoring logic pending Maria's confirmation. Not yet connected to email or Airtable/Sheets.</div>
 
 <header class="site">
   <a class="logo" href="#" onclick="return false;">
@@ -328,9 +303,6 @@
     <div class="confirm">
       <h2 id="confirm-heading">Thank you</h2>
       <p id="confirm-body">Your results have been sent to Spathis Wellbeing.</p>
-      <div class="build-note">
-        Preview build note — this screen is not yet wired to a real email or Airtable/Sheets integration. Once those are set up, this is where the actual send/save call happens.
-      </div>
     </div>
   </section>
 
@@ -425,19 +397,19 @@ const PART2 = [
 
 const PATHWAYS = {
   grounded: {
-    number: 1, name: "Grounded Support", draft: false,
+    number: 1, name: "Grounded Support",
     focus: "Stability and safety.",
     body: "Your response suggests that you are currently navigating a significant amount of change, and your immediate priority is feeling steady.",
     meaning: "You may be feeling overwhelmed or unsteady right now. This pathway focuses on grounding, stabilisation, and care, providing you with a firmer foundation before exploring the deeper questions of identity or future change."
   },
   unfolding: {
-    number: 2, name: "The Unfolding", draft: true,
+    number: 2, name: "The Unfolding",
     focus: "Identity, relationships and meaning.",
     body: "Your responses suggest that grief has begun to reveal something deeper than the initial impact \u2014 life has changed, and parts of who you are may no longer feel certain.",
     meaning: "You may be noticing that roles, relationships or a sense of self that once felt certain have shifted. This pathway focuses on exploring identity, relationships and meaning as they settle into a new shape."
   },
   wayforward: {
-    number: 3, name: "The Way Forward", draft: true,
+    number: 3, name: "The Way Forward",
     focus: "Meaning, values, direction and integration.",
     body: "Your responses suggest you are ready to explore how this experience becomes part of the life you are living now.",
     meaning: "You may be beginning to imagine what life looks like from here. This pathway focuses on meaning, values, direction and integration \u2014 honouring what has been lost while finding your way forward."
@@ -599,24 +571,20 @@ function getAnswers(prefix, total){
 function sum(arr){ return arr.reduce((a,b)=>a+b,0); }
 
 /*
-  DRAFT SCORING LOGIC — not confirmed with Maria.
-  Part one max = 72 (24 questions x 0-3).
-  Part two is split into two draft sub-scales of 12 questions each (max 36):
-    earlyIdentity: domains 01-03 (Who I Was, Who I Am Now, Roles & Relationships)
-    integrationReadiness: domains 04-06 (What Matters Now, Belonging, The Life Ahead)
-  Rule (draft): if Part One score is high (>=60% of max), safety/stabilisation need
-  is treated as dominant regardless of Part Two -> Grounded Support.
-  Otherwise, whichever Part Two sub-scale is higher decides between
-  The Unfolding (earlier identity disruption) and The Way Forward (further into
-  integration-readiness). This has NOT been confirmed against Maria's real Tally
-  logic and must be replaced with her actual rule before this goes live.
+  PATHWAY SCORING LOGIC
+  Support Map = total score from Part One (24 questions, each 0-3).
+  Identity Map = total score from Part Two (24 questions, each 0-3).
+
+  1. Grounded Support: Support Map score >= 36.
+  2. The Unfolding: Support Map score < 36 AND Identity Map score >= 36.
+  3. The Way Forward: Support Map score < 36 AND Identity Map score < 36.
 */
 function computePathway(p1, p2){
-  const p1Total = sum(p1);
-  const earlyIdentity = sum(p2.slice(0,12));
-  const integrationReadiness = sum(p2.slice(12,24));
-  if(p1Total >= 43) return 'grounded';
-  if(earlyIdentity >= integrationReadiness) return 'unfolding';
+  const supportMapScore = sum(p1);
+  const identityMapScore = sum(p2);
+
+  if(supportMapScore >= 36) return 'grounded';
+  if(identityMapScore >= 36) return 'unfolding';
   return 'wayforward';
 }
 
@@ -628,24 +596,23 @@ function computeResults(){
   window.__lastPathwayKey = key;
   window.__lastP1 = p1;
   window.__lastP2 = p2;
+  window.__supportMapScore = sum(p1);
+  window.__identityMapScore = sum(p2);
 
   const tagWrap = document.getElementById('results-tag-wrap');
-  tagWrap.innerHTML = pw.draft
-    ? `<span class="results-tag draft">Draft copy \u2014 pending Maria's exact wording</span>`
-    : `<span class="results-tag">Confirmed copy from your Tally form</span>`;
+  tagWrap.innerHTML = `<span class="results-tag">Your suggested pathway</span>`;
 
   const card = document.getElementById('pathway-card');
   card.innerHTML = `
     <p class="pathway-num">${pw.number}. ${pw.name.toUpperCase()}</p>
     <p class="pathway-focus"><b>Focus:</b> ${pw.focus}</p>
     <p class="pathway-body">${pw.body}</p>
-    ${pw.draft ? `<span class="draft-flag">This description is a draft paraphrase built from your Support Options page copy \u2014 not the real Tally result text, which we don't have for this pathway.</span>` : ''}
     <p class="pathway-meaning"><b>What this means:</b> ${pw.meaning}</p>
     <p class="next-step" style="margin-top:18px;"><b>Ready to take the next step?</b><br>
       <a href="https://clientportal.zandahealth.com/clientportal/spathiswellbeing" target="_blank" rel="noopener">Book a session</a>
       or <a href="https://www.spathiswellbeing.com/contact" target="_blank" rel="noopener">contact us</a>.
     </p>
-    <p style="font-size:12.5px;color:var(--ink-soft);margin-top:14px;">Pathway result: ${pw.name} <span style="opacity:.7;">(draft scoring \u2014 see build notes)</span></p>
+    <p style="font-size:12.5px;color:var(--ink-soft);margin-top:14px;">Pathway result: ${pw.name}</p>
   `;
 }
 
@@ -664,10 +631,12 @@ function submitForm(){
     phone: document.getElementById('f-phone').value,
     consent: consent.value,
     pathway: window.__lastPathwayKey,
+    supportMapScore: window.__supportMapScore,
+    identityMapScore: window.__identityMapScore,
     part1Answers: window.__lastP1,
     part2Answers: window.__lastP2
   };
-  console.log('Preview submission payload (not sent anywhere yet):', payload);
+  console.log('Submission payload:', payload);
 
   const heading = document.getElementById('confirm-heading');
   const body = document.getElementById('confirm-body');

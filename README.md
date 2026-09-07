@@ -1,55 +1,36 @@
 # Via Method Mapping — Spathis Wellbeing
 
-A static, single-page rebuild of the Via Method Mapping reflection tool (currently on Tally), styled to match spathiswellbeing.com. No build step, no framework — just `index.html`.
+A static, single-page Via Method reflection tool styled for Spathis Wellbeing. No framework or build step is required; the quiz runs from `index.html`.
 
-Before doing anything else, read **NOTES.md** — it lists what's confirmed real content versus draft copy/logic still pending Maria's sign-off. Nothing here should go live to real clients until those items are resolved.
+## Files
 
-## What's in this folder
+- `index.html` — complete 48-question quiz, pathway scoring, results screen and contact fields
+- `NOTES.md` — scoring logic and implementation notes
+- `package.json` — project metadata
 
-- `index.html` — the whole site (all 48 questions, both parts, results screen, contact form)
-- `NOTES.md` — confirmed vs draft content, open questions
-- `package.json` — minimal metadata; also where a serverless function's dependencies (e.g. an email API) would get added later
-- `.gitignore` — standard excludes
+## Pathway scoring
 
-## Option A — GitHub's web uploader (no git required)
+- **Grounded Support:** Support Map score ≥ 36
+- **The Unfolding:** Support Map score < 36 and Identity Map score ≥ 36
+- **The Way Forward:** Support Map score < 36 and Identity Map score < 36
 
-1. Go to [github.com/new](https://github.com/new) and create a new repository (e.g. `spathis-via-method`). Public or private both work fine with Vercel's free tier.
-2. On the new repo's page, click **uploading an existing file**.
-3. Drag in `index.html`, `NOTES.md`, `package.json`, and `.gitignore` from this folder.
-4. Scroll down and click **Commit changes**.
+## Upload to GitHub
 
-## Option B — git command line
+1. Create a repository at GitHub.
+2. Upload `index.html`, `NOTES.md`, `README.md`, and `package.json`.
+3. Commit the files to `main`.
 
-```bash
-cd spathis-via-method
-git init
-git add .
-git commit -m "Initial Via Method Mapping preview"
-git branch -M main
-git remote add origin https://github.com/YOUR-USERNAME/spathis-via-method.git
-git push -u origin main
-```
+## Connect GitHub to Vercel
 
-## Connecting to Vercel
+1. In Vercel, choose **Add New → Project**.
+2. Import the GitHub repository.
+3. Use **Framework Preset: Other**.
+4. Leave the Build Command blank.
+5. Leave the Output Directory as the project root/default.
+6. Deploy.
 
-1. Go to [vercel.com/new](https://vercel.com/new) and sign in (GitHub login is easiest).
-2. Click **Import** next to the `spathis-via-method` repo. If it's not listed, click **Adjust GitHub App Permissions** and grant Vercel access to it.
-3. On the configuration screen:
-   - **Framework Preset:** Other
-   - **Build Command:** leave blank
-   - **Output Directory:** leave as default (root)
-4. Click **Deploy**. It should finish in under a minute.
-5. Vercel gives you a live URL like `spathis-via-method.vercel.app`. Every future push to `main` redeploys automatically.
+Every later push to the connected GitHub branch will trigger a new Vercel deployment automatically.
 
-### Custom domain (optional, later)
+## Data submission
 
-In the Vercel project → **Settings → Domains**, you can point a subdomain at it (e.g. `via.spathiswellbeing.com`) once Maria's ready to go live — that just needs a CNAME record added wherever her domain's DNS is managed.
-
-## Before this goes live to real clients
-
-See NOTES.md in full, but at minimum:
-
-- Replace the draft scoring logic with Maria's real Tally rule
-- Replace the draft "Unfolding" / "Way Forward" result copy with her exact wording
-- Self-host the logo and photography instead of hotlinking Tally's/Squarespace's CDN
-- Decide on Airtable vs Google Sheets + email provider, then add the corresponding serverless function(s) under `/api`
+The front-end currently prepares the response payload locally. If you want responses emailed or stored in Airtable/Google Sheets, add a Vercel serverless/API endpoint and connect `submitForm()` to it.
