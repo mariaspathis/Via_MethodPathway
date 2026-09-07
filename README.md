@@ -5,14 +5,14 @@ This version does not automatically email, transmit, or save a client's reflecti
 ## Client experience
 1. Complete the 48-statement reflection.
 2. See the suggested Via Method pathway immediately on screen.
-3. Choose **Send to Spathis Wellbeing** to open the client's own email app with a pre-written email addressed to contact@spathiswellbeing.com.
+3. Choose **Share my pathway with Spathis Wellbeing** to open the client's own email app with a pre-written email addressed to contact@spathiswellbeing.com.
 4. The client must press Send themselves.
 5. The existing website contact button is labelled **Book a conversation**.
 
 ## Important
 There is no Resend, Gmail SMTP, API key, App Password, Vercel email function, or Vercel response logging in this version.
 
-The Send to Spathis Wellbeing button uses a `mailto:` link. Whether it opens successfully depends on the client having an email application or browser mail handler configured.
+The Share my pathway with Spathis Wellbeing button uses a `mailto:` link. Whether it opens successfully depends on the client having an email application or browser mail handler configured.
 
 ## Remove the old API folder from GitHub
 Before redeploying, remove the old API email/logging code from your GitHub repository:
