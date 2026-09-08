@@ -32,3 +32,10 @@ The pathway messages use reflective language such as “suggest”, “may” an
 - Removed the pathway-card “Ready to take the next step?” / booking prompt.
 - Removed the small “Suggested starting point” line underneath the pathway card.
 - Updated the sharing explanation to: “The email will open first so you can review it before sending.”
+
+## Part headings
+Part one: Your Via Landscape
+Explore where loss or change may be affecting you right now, and what may need greater support, care or steadiness.
+
+Part two: Your Identity Map
+Explore how loss or change may be shaping your sense of self, relationships, meaning and the life ahead.
