@@ -386,22 +386,31 @@ const PART2 = [
 
 const PATHWAYS = {
   grounded: {
-    number: 1, name: "Grounded Support",
-    focus: "Stability and safety.",
-    body: "Your response suggests that you are currently navigating a significant amount of change, and your immediate priority is feeling steady.",
-    meaning: "You may be feeling overwhelmed or unsteady right now. This pathway focuses on grounding, stabilisation, and care, providing you with a firmer foundation before exploring the deeper questions of identity or future change."
+    number: 1,
+    name: "Grounded Support",
+    question: "What happened, and what do I need?",
+    focus: "Understanding · Safety · Grounding · Support",
+    body: "Your responses suggest that having somewhere steady to begin may be most supportive right now.",
+    meaning: "Loss can affect your sense of safety, your body, your emotions and your ability to manage everyday life. You may not need to work out what comes next yet. Grounded Support creates space to understand what you are carrying, find greater steadiness and notice what you need as you move through this experience.",
+    invitation: "For now, the starting point may simply be finding enough steadiness to meet what is here."
   },
   unfolding: {
-    number: 2, name: "The Unfolding",
-    focus: "Identity, relationships and meaning.",
-    body: "Your responses suggest that grief has begun to reveal something deeper than the initial impact \u2014 life has changed, and parts of who you are may no longer feel certain.",
-    meaning: "You may be noticing that roles, relationships or a sense of self that once felt certain have shifted. This pathway focuses on exploring identity, relationships and meaning as they settle into a new shape."
+    number: 2,
+    name: "The Unfolding",
+    question: "Who am I now that life has changed?",
+    focus: "Identity · Meaning · Relationships · Self-Understanding",
+    body: "Your responses suggest that your experience may be affecting more than how you feel — it may also be changing how you understand yourself.",
+    meaning: "Roles, relationships, priorities or parts of your former life may no longer feel quite the same. The Unfolding creates space to explore who you were, who you are now and what this loss or change has shifted within you, without needing to rush toward an answer.",
+    invitation: "The work here is not about becoming someone new. It is about making space to understand who you are within a life that has changed."
   },
   wayforward: {
-    number: 3, name: "The Way Forward",
-    focus: "Meaning, values, direction and integration.",
-    body: "Your responses suggest you are ready to explore how this experience becomes part of the life you are living now.",
-    meaning: "You may be beginning to imagine what life looks like from here. This pathway focuses on meaning, values, direction and integration \u2014 honouring what has been lost while finding your way forward."
+    number: 3,
+    name: "The Way Forward",
+    question: "How do I live within the life that has changed?",
+    focus: "Meaning · Values · Direction · Integration",
+    body: "Your responses suggest that you may be ready to look more closely at how this experience becomes part of the life you are living now.",
+    meaning: "Moving forward does not mean leaving behind what happened, what was lost or who you were. The Way Forward creates space to explore what matters now, what you want to carry with you and how life can continue in a way that honours both what has been and what is still possible.",
+    invitation: "The way forward is not about moving on. It is about finding a way to live with what remains while allowing life to keep unfolding."
   }
 };
 
@@ -640,12 +649,14 @@ function computeResponse(){
   const card = document.getElementById('pathway-card');
   card.innerHTML = `
     <p class="pathway-num">${pw.number}. ${pw.name.toUpperCase()}</p>
+    <p style="font-family:var(--serif);font-size:19px;margin:7px 0 12px;"><i>${pw.question}</i></p>
     <p class="pathway-focus"><b>Focus:</b> ${pw.focus}</p>
     <p class="pathway-body">${pw.body}</p>
-    <p class="pathway-meaning"><b>What this means:</b> ${pw.meaning}</p>
+    <p class="pathway-meaning"><b>What this may mean for you:</b> ${pw.meaning}</p>
     <p class="pathway-body"><b>Your reflection particularly highlighted:</b> ${strongest.join(", ")}.</p>
-    <p class="next-step" style="margin-top:18px;"><b>Ready to take the next step?</b><br>
-      <a href="https://clientportal.zandahealth.com/clientportal/spathiswellbeing" target="_blank" rel="noopener">Book a session</a>
+    <p class="pathway-meaning" style="margin-top:16px;"><i>${pw.invitation}</i></p>
+    <p class="next-step" style="margin-top:20px;"><b>If this feels like the right place to begin</b><br>
+      You can <a href="https://clientportal.zandahealth.com/clientportal/spathiswellbeing" target="_blank" rel="noopener">book a session</a>
       or <a href="https://www.spathiswellbeing.com/contact" target="_blank" rel="noopener">book a conversation</a>.
     </p>
     <p style="font-size:12.5px;color:var(--ink-soft);margin-top:14px;">Suggested starting point: ${pw.name}</p>

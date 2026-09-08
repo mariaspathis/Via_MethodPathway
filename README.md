@@ -1,30 +1,29 @@
-# Where Do I Begin? — A Via Method Reflection
+# Where Do I Begin? — Refined pathway messages
 
-## Changes in this version
-- Adds: “Answer for where you are now, rather than where you think you should be.”
-- Keeps numerical Via Map scores hidden from the client-facing recommendation.
-- The client-controlled email still sends Maria the area scores and totals if the client chooses to share.
-- Changes “pathway recommendation” to “suggested starting point”.
-- Shows the three areas most highlighted by the client's responses, without displaying numbers.
-- Separates “Book a conversation” from “Share my Via Map” so sharing is clearly optional.
-- Makes each part clearer: Part 1 of 2 — Support · 24 statements; Part 2 of 2 — Identity · 24 statements.
+This version refines the client-facing response for each suggested starting point.
 
-## Updated pathway guidance logic
-Grounded Support:
-- Support total 40–72; OR
-- Support total 33–39 and at least two Support areas score 8–12.
+## Grounded Support
+**What happened, and what do I need?**
+Focus: Understanding · Safety · Grounding · Support
 
-The Unfolding, when Grounded Support is not indicated:
-- Identity total 40–72; OR
-- Identity total 33–39 and at least two Identity areas score 8–12.
+The message centres steadiness and understanding before asking the person to think about what comes next.
 
-The Way Forward:
-- Neither of the above patterns is present.
+## The Unfolding
+**Who am I now that life has changed?**
+Focus: Identity · Meaning · Relationships · Self-Understanding
 
-This is a reflective pathway guide, not a diagnostic or clinical severity score.
+The message centres identity change without implying that the person must reinvent or “become” someone new.
 
-## Data
-Nothing is automatically stored. If a client chooses “Share my Via Map”, the generated email contains the suggested starting point, all 12 area scores, and the two map totals. Maria can retain those emails according to her normal privacy/record-keeping process.
+## The Way Forward
+**How do I live within the life that has changed?**
+Focus: Meaning · Values · Direction · Integration
 
-## GitHub
-Replace the current `index.html` with this version and commit. Vercel should redeploy automatically.
+The message explicitly distinguishes moving forward from “moving on” and keeps connection with what has been lost.
+
+## Personalisation
+The response also names the three Via areas most highlighted by the person's reflection, without showing numerical scores to the client.
+
+The numerical Via Map remains available only in the optional client-controlled sharing email.
+
+## Important
+The pathway messages use reflective language such as “suggest”, “may” and “if this feels like the right place to begin.” The reflection is a guide to a possible starting point, not a diagnostic assessment.
