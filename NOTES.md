@@ -1,38 +1,20 @@
-# Via Method Mapping — Clean final version
+# Via Method — client-controlled Via Map sharing
 
-This version has no automatic email sending and no Vercel response logging.
+This version:
+- Does not automatically email or save responses.
+- Shows the client's suggested Via Method pathway on screen.
+- Lets the client choose whether to share a concise Via Map with Spathis Wellbeing.
+- Opens the client's own email app; the client reviews the email and presses Send themselves.
+- The email includes:
+  - Suggested pathway
+  - Six Support Map area scores (each out of 12)
+  - Support Map total (out of 72)
+  - Six Identity Map area scores (each out of 12)
+  - Identity Map total (out of 72)
+  - Blank Name and Phone fields
+- It does not include all 48 individual answers.
+- The existing “contact us” wording in the pathway card is changed to “book a conversation”.
+- No Gmail SMTP, Resend, API key, App Password, Vercel API endpoint, or Vercel logging is used.
 
-## Final pathway screen
-After the client sees their suggested Via Method pathway, the only additional section is:
-
-**Share your pathway with Spathis Wellbeing**
-
-The client is told that the button opens a pre-written email in their own email app. They can review it before choosing to send.
-
-Buttons:
-- Share my pathway with Spathis Wellbeing
-- Back
-
-The old section containing:
-- “What would you like to do next?”
-- “Print / save my response”
-- the coloured sharing button
-- the duplicate Book a conversation button
-
-has been removed.
-
-## Existing footer
-The website contact button is labelled **Book a conversation**.
-
-## Important GitHub cleanup
-Before redeploying:
-1. Open your GitHub repository.
-2. Delete every file inside the old `api` folder.
-3. Commit the deletion.
-4. Delete/replace the old `index.html`.
-5. Upload the new `index.html` from this package.
-6. Commit the new files.
-7. Confirm the `api` folder is no longer visible in the repository.
-8. Vercel should redeploy automatically from GitHub.
-
-If Vercel still shows the old final screen, open Vercel → Deployments and make sure the newest deployment is the one marked Production.
+## GitHub cleanup
+Delete every file inside the old `api` folder in GitHub and commit the deletion. Once empty, GitHub removes the folder automatically. Replace the old `index.html` with the new one from this package, commit, and allow Vercel to redeploy.

@@ -271,14 +271,14 @@
     <div class="pathway-card" id="pathway-card"></div>
 
     <div class="share-panel" style="margin-top:28px;">
-      <h3 style="font-family:var(--serif);font-weight:500;font-size:19px;margin:0 0 10px;">Share your pathway with Spathis Wellbeing</h3>
+      <h3 style="font-family:var(--serif);font-weight:500;font-size:19px;margin:0 0 10px;">Share your Via Map with Spathis Wellbeing</h3>
       <p style="font-size:14.5px;line-height:1.6;margin:0 0 18px;">
-        If you would like to explore this further, you can send your suggested pathway directly to Maria.
-        This will open a pre-written email in your own email app so you can review it before choosing to send.
+        If you would like Maria to have some context before you make contact, you can share a summary of your reflection.
+        The email will include your suggested pathway and your Via Map scores across each area. It will open in your own email app so you can review everything before choosing to send.
       </p>
 
       <div class="actions" style="align-items:stretch;">
-        <button class="btn ghost" onclick="shareByEmail()" style="text-align:center;">Share my pathway with Spathis Wellbeing</button>
+        <button class="btn ghost" onclick="shareByEmail()" style="text-align:center;">Share my Via Map with Spathis Wellbeing</button>
         <button class="btn ghost" onclick="goTo('part2')" style="text-align:center;">Back</button>
       </div>
     </div>
@@ -589,7 +589,7 @@ function computeResponse(){
     <p class="pathway-meaning"><b>What this means:</b> ${pw.meaning}</p>
     <p class="next-step" style="margin-top:18px;"><b>Ready to take the next step?</b><br>
       <a href="https://clientportal.zandahealth.com/clientportal/spathiswellbeing" target="_blank" rel="noopener">Book a session</a>
-      or <a href="https://www.spathiswellbeing.com/contact" target="_blank" rel="noopener">contact us</a>.
+      or <a href="https://www.spathiswellbeing.com/contact" target="_blank" rel="noopener">book a conversation</a>.
     </p>
     <p style="font-size:12.5px;color:var(--ink-soft);margin-top:14px;">Pathway recommendation: ${pw.name}</p>
   `;
@@ -598,12 +598,49 @@ function computeResponse(){
 function shareByEmail(){
   const key = window.__lastPathwayKey;
   const p = PATHWAYS[key];
-  if(!p) return;
+  const p1 = window.__lastP1;
+  const p2 = window.__lastP2;
+  if(!p || !Array.isArray(p1) || !Array.isArray(p2)) return;
 
-  const subject = 'My Via Method Reflection';
+  const domainScores = (answers) => {
+    const scores = [];
+    for(let i = 0; i < 6; i++){
+      const start = i * 4;
+      scores.push(answers.slice(start, start + 4).reduce((total, value) => total + Number(value || 0), 0));
+    }
+    return scores;
+  };
+
+  const support = domainScores(p1);
+  const identity = domainScores(p2);
+  const supportTotal = support.reduce((a, b) => a + b, 0);
+  const identityTotal = identity.reduce((a, b) => a + b, 0);
+
+  const subject = 'My Via Method Reflection — ' + p.name;
   const body =
     'Hi Maria,\n\n' +
-    'I completed the Via Method reflection. My suggested starting point is ' + p.name + '.\n\n' +
+    'I completed the Via Method reflection and would like to share my Via Map with you.\n\n' +
+    'SUGGESTED STARTING POINT\n' +
+    p.name + '\n\n' +
+
+    'SUPPORT MAP\n' +
+    'Safety: ' + support[0] + '/12\n' +
+    'Kindness: ' + support[1] + '/12\n' +
+    'Care: ' + support[2] + '/12\n' +
+    'The Body: ' + support[3] + '/12\n' +
+    'Feelings, Emotions & Thoughts: ' + support[4] + '/12\n' +
+    'Sharing: ' + support[5] + '/12\n' +
+    'Support Map total: ' + supportTotal + '/72\n\n' +
+
+    'IDENTITY MAP\n' +
+    'Who I Was: ' + identity[0] + '/12\n' +
+    'Who I Am Now: ' + identity[1] + '/12\n' +
+    'Roles & Relationships: ' + identity[2] + '/12\n' +
+    'What Matters Now: ' + identity[3] + '/12\n' +
+    'Belonging: ' + identity[4] + '/12\n' +
+    'The Life Ahead: ' + identity[5] + '/12\n' +
+    'Identity Map total: ' + identityTotal + '/72\n\n' +
+
     'I would like to learn more about this pathway and the support available.\n\n' +
     'Name: \n' +
     'Phone: \n\n' +
