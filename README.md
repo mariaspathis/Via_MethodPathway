@@ -39,3 +39,7 @@ Explore where loss or change may be affecting you right now, and what may need g
 
 Part two: Your Identity Map
 Explore how loss or change may be shaping your sense of self, relationships, meaning and the life ahead.
+
+
+## Sharing copy update
+Share a summary of the reflection with Maria before making contact. This can help provide a clearer picture of what may need support and where it may be most helpful to begin. The email will open first so it can be reviewed before sending.
