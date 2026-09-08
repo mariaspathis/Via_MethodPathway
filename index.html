@@ -601,20 +601,13 @@ function shareByEmail(){
   if(!p) return;
 
   const subject = 'My Via Method Reflection';
-  const body = [
-    'Hi Maria,',
-    '',
-    'I completed the Via Method reflection and received the following suggested starting point:',
-    '',
-    p.name + '.',
-    '',
-    'I would like to explore what support might be right for me.',
-    '',
-    'Name:',
-    'Phone:',
-    '',
-    'Thank you.'
-  ].join('\\n');
+  const body =
+    'Hi Maria,\n\n' +
+    'I completed the Via Method reflection. My suggested starting point is ' + p.name + '.\n\n' +
+    'I would like to learn more about this pathway and the support available.\n\n' +
+    'Name: \n' +
+    'Phone: \n\n' +
+    'Thank you.';
 
   window.location.href =
     'mailto:contact@spathiswellbeing.com?subject=' +
