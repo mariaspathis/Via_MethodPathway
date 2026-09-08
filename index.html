@@ -182,9 +182,48 @@
   .confirm h2{font-family:var(--serif);font-weight:400;font-size:28px;margin:0 0 14px;}
   .confirm p{color:var(--ink-soft);font-size:15px;max-width:44ch;margin:0 auto 8px;}
 
+
+  /* Intro overview */
+  .journey-overview{margin:26px 0 30px;}
+  .journey-part{
+    border:1px solid var(--line); border-radius:14px; padding:18px 18px 16px;
+    margin:12px 0; background:#fff;
+  }
+  .journey-part.support{border-top:4px solid var(--terracotta);}
+  .journey-part.identity{border-top:4px solid var(--gold);}
+  .journey-eyebrow{
+    display:block;font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;
+    color:var(--ink-soft);margin-bottom:4px;
+  }
+  .journey-part h4{font-size:18px;font-weight:600;margin:0 0 5px;}
+  .journey-part p{font-size:13.5px;color:var(--ink-soft);margin:0 0 12px;}
+  .area-chips{display:flex;flex-wrap:wrap;gap:7px;}
+  .area-chip{
+    display:inline-flex;align-items:center;min-height:30px;padding:6px 10px;border-radius:999px;
+    font-size:12px;line-height:1.2;background:var(--near-white);border:1px solid var(--line);
+  }
+
+  /* Response scale */
+  .scale-key{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:16px 0 8px;
+  }
+  .scale-key .scale-item{
+    min-height:92px;border:1px solid var(--line);border-radius:13px;background:#fff;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+    padding:12px 7px;
+  }
+  .scale-key .scale-number{
+    display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;
+    background:var(--blue-mist);font-size:16px;font-weight:700;margin-bottom:8px;
+  }
+  .scale-key .scale-label{font-size:12.5px;line-height:1.25;color:var(--ink-soft);}
+
   @media (max-width:480px){
     .hero h1{font-size:28px;}
     .opt span{width:100%;height:40px;}
+    .scale-key{grid-template-columns:repeat(2,1fr);}
+    .scale-key .scale-item{min-height:82px;}
+    .journey-part{padding:16px 14px;}
   }
 </style>
 </head>
@@ -212,13 +251,45 @@
       <p>You may need support to feel steadier. You may be wondering "Who am I now?" Or you may be trying to understand how to live within a life that has changed.</p>
       <p>This reflection helps you see where you are now, what may need attention, and where your Via Method journey might begin.</p>
 
+      <h3>What you'll explore</h3>
+      <p>The reflection moves through two parts. Each part contains six areas, so you can see clearly what you will be reflecting on before you begin.</p>
+
+      <div class="journey-overview">
+        <div class="journey-part support">
+          <span class="journey-eyebrow">Part 1 · Support</span>
+          <h4>Your Via Landscape</h4>
+          <p>Explores what may need support in your experience right now.</p>
+          <div class="area-chips">
+            <span class="area-chip">Safety</span>
+            <span class="area-chip">Kindness</span>
+            <span class="area-chip">Care</span>
+            <span class="area-chip">The Body</span>
+            <span class="area-chip">Feelings, Emotions &amp; Thoughts</span>
+            <span class="area-chip">Sharing</span>
+          </div>
+        </div>
+        <div class="journey-part identity">
+          <span class="journey-eyebrow">Part 2 · Identity</span>
+          <h4>Your Identity Map</h4>
+          <p>Explores how loss or change may be shaping your sense of self and the life ahead.</p>
+          <div class="area-chips">
+            <span class="area-chip">Who I Was</span>
+            <span class="area-chip">Who I Am Now</span>
+            <span class="area-chip">Roles &amp; Relationships</span>
+            <span class="area-chip">What Matters Now</span>
+            <span class="area-chip">Belonging</span>
+            <span class="area-chip">The Life Ahead</span>
+          </div>
+        </div>
+      </div>
+
       <h3>The process</h3>
       <p>Respond to each statement on a scale from 0 to 3, based on what feels most true for you right now.</p>
-      <div class="scale-key">
-        <div><b>0</b>Not at all</div>
-        <div><b>1</b>A little</div>
-        <div><b>2</b>Quite a lot</div>
-        <div><b>3</b>Very much</div>
+      <div class="scale-key" aria-label="Response scale">
+        <div class="scale-item"><span class="scale-number">0</span><span class="scale-label">Not at all</span></div>
+        <div class="scale-item"><span class="scale-number">1</span><span class="scale-label">A little</span></div>
+        <div class="scale-item"><span class="scale-number">2</span><span class="scale-label">Quite a lot</span></div>
+        <div class="scale-item"><span class="scale-number">3</span><span class="scale-label">Very much</span></div>
       </div>
 
       <p style="margin-top:22px;">Your responses will create two personalised reflections:</p>
