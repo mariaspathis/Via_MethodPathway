@@ -205,7 +205,7 @@
     <div class="hero">
       <p class="kicker">A Via Method Reflection</p>
       <h1>Where Do I Begin?</h1>
-      <p>Take a moment to notice where you are now and discover which Via Method pathway may be the most supportive place to begin.</p><p style="font-size:14.5px;color:var(--ink-soft);margin-top:10px;">This reflection has two parts with 48 statements in total. There are no right or wrong answers — simply choose the response that feels closest to your experience right now.</p>
+      <p>Take a moment to notice where you are now and discover which Via Method pathway may be the most supportive place to begin.</p><p style="font-size:14.5px;color:var(--ink-soft);margin-top:10px;">This reflection has two parts with 48 statements in total. There are no right or wrong answers — simply choose the response that feels closest to your experience right now.<br><br><b>Answer for where you are now, rather than where you think you should be.</b></p>
 
       <h3>The purpose</h3>
       <p>Loss can change more than how you feel. It can affect your body, relationships, sense of safety, identity, meaning and the way you imagine your future.</p>
@@ -272,15 +272,24 @@
     <div class="pathway-card" id="pathway-card"></div>
 
     <div class="share-panel" style="margin-top:28px;">
-      <h3 style="font-family:var(--serif);font-weight:500;font-size:19px;margin:0 0 10px;">Share your Via Map with Spathis Wellbeing</h3>
+      <h3 style="font-family:var(--serif);font-weight:500;font-size:19px;margin:0 0 10px;">What would you like to do next?</h3>
       <p style="font-size:14.5px;line-height:1.6;margin:0 0 18px;">
-        If you would like Maria to have some context before you make contact, you can share a summary of your reflection.
-        The email will include your suggested pathway and your Via Map scores across each area. It will open in your own email app so you can review everything before choosing to send.
+        You can book a conversation without sharing your Via Map, or choose to send Maria a summary of your reflection before you speak.
       </p>
 
-      <div class="actions" style="align-items:stretch;">
+      <div style="margin-bottom:18px;">
+        <p style="margin:0 0 6px;"><b>Book a conversation</b></p>
+        <p style="font-size:13.5px;line-height:1.5;margin:0 0 10px;">I'd like to talk about what support may be right for me.</p>
+        <a class="btn" href="https://www.spathiswellbeing.com/contact" target="_blank" rel="noopener" style="text-align:center;">Book a conversation</a>
+      </div>
+
+      <div style="margin-bottom:18px;">
+        <p style="margin:0 0 6px;"><b>Share my Via Map</b></p>
+        <p style="font-size:13.5px;line-height:1.5;margin:0 0 10px;">I'd like Maria to see a summary of my reflection before we speak. The email will open first so I can review it before sending.</p>
         <button class="btn ghost" onclick="shareByEmail()" style="text-align:center;">Share my Via Map with Spathis Wellbeing</button>
-        <button class="btn ghost" onclick="goTo('part2')" style="text-align:center;">Back</button>
+      </div>
+
+      <button class="btn ghost" onclick="goTo('part2')" style="text-align:center;">Back</button>
       </div>
     </div>
   </section>
@@ -436,7 +445,7 @@ const SECTIONS_PER_PART = 6;
 function showSection(prefix, idx){
   const domains = document.querySelectorAll('#'+prefix+'-domains .domain');
   domains.forEach((d,i) => d.classList.toggle('section-active', i === idx));
-  const partName = prefix === 'p1' ? 'Part one of two' : 'Part two of two';
+  const partName = prefix === 'p1' ? 'Part 1 of 2 — Support · 24 statements' : 'Part 2 of 2 — Identity · 24 statements';
   document.getElementById(prefix+'-progress-label').textContent =
     partName + ' \u2014 section ' + (idx+1) + ' of ' + SECTIONS_PER_PART;
   document.getElementById(prefix+'-progress-fill').style.width =
@@ -551,21 +560,66 @@ function getAnswers(prefix, total){
 function sum(arr){ return arr.reduce((a,b)=>a+b,0); }
 
 /*
-  PATHWAY SCORING LOGIC
-  Support Map = total score from Part One (24 questions, each 0-3).
-  Identity Map = total score from Part Two (24 questions, each 0-3).
+  PATHWAY GUIDANCE LOGIC
+  Each part has 24 responses scored 0–3 (maximum 72).
+  Each area contains four responses (maximum 12).
 
-  1. Grounded Support: Support Map score >= 36.
-  2. The Unfolding: Support Map score < 36 AND Identity Map score >= 36.
-  3. The Way Forward: Support Map score < 36 AND Identity Map score < 36.
+  The totals are interpreted in bands rather than using one hard cut-off.
+  In a middle band, the pattern across individual areas helps decide the starting point.
+
+  Grounded Support:
+    - Support total 40–72; OR
+    - Support total 33–39 with at least two Support areas scoring 8–12.
+
+  The Unfolding (when Grounded Support is not indicated):
+    - Identity total 40–72; OR
+    - Identity total 33–39 with at least two Identity areas scoring 8–12.
+
+  The Way Forward:
+    - Used when neither of the above patterns is present.
+
+  This is a reflective pathway guide, not a diagnostic or clinical severity score.
 */
-function computePathway(p1, p2){
-  const supportMapScore = sum(p1);
-  const identityMapScore = sum(p2);
+function getDomainScores(answers){
+  const scores = [];
+  for(let i = 0; i < 6; i++){
+    const start = i * 4;
+    scores.push(sum(answers.slice(start, start + 4)));
+  }
+  return scores;
+}
 
-  if(supportMapScore >= 36) return 'grounded';
-  if(identityMapScore >= 36) return 'unfolding';
+function computePathway(p1, p2){
+  const supportTotal = sum(p1);
+  const identityTotal = sum(p2);
+  const supportAreas = getDomainScores(p1);
+  const identityAreas = getDomainScores(p2);
+
+  const concentratedSupport = supportAreas.filter(score => score >= 8).length >= 2;
+  const concentratedIdentity = identityAreas.filter(score => score >= 8).length >= 2;
+
+  if(supportTotal >= 40 || (supportTotal >= 33 && concentratedSupport)){
+    return 'grounded';
+  }
+
+  if(identityTotal >= 40 || (identityTotal >= 33 && concentratedIdentity)){
+    return 'unfolding';
+  }
+
   return 'wayforward';
+}
+
+function strongestAreas(p1, p2){
+  const supportNames = ['Safety','Kindness','Care','The Body','Feelings, Emotions & Thoughts','Sharing'];
+  const identityNames = ['Who I Was','Who I Am Now','Roles & Relationships','What Matters Now','Belonging','The Life Ahead'];
+  const supportScores = getDomainScores(p1);
+  const identityScores = getDomainScores(p2);
+
+  return supportNames.map((name, i) => ({name, score:supportScores[i]}))
+    .concat(identityNames.map((name, i) => ({name, score:identityScores[i]})))
+    .sort((a,b) => b.score - a.score)
+    .slice(0,3)
+    .map(item => item.name);
 }
 
 function computeResponse(){
@@ -573,6 +627,7 @@ function computeResponse(){
   const p2 = getAnswers('p2', 24);
   const key = computePathway(p1, p2);
   const pw = PATHWAYS[key];
+  const strongest = strongestAreas(p1, p2);
   window.__lastPathwayKey = key;
   window.__lastP1 = p1;
   window.__lastP2 = p2;
@@ -588,11 +643,12 @@ function computeResponse(){
     <p class="pathway-focus"><b>Focus:</b> ${pw.focus}</p>
     <p class="pathway-body">${pw.body}</p>
     <p class="pathway-meaning"><b>What this means:</b> ${pw.meaning}</p>
+    <p class="pathway-body"><b>Your reflection particularly highlighted:</b> ${strongest.join(", ")}.</p>
     <p class="next-step" style="margin-top:18px;"><b>Ready to take the next step?</b><br>
       <a href="https://clientportal.zandahealth.com/clientportal/spathiswellbeing" target="_blank" rel="noopener">Book a session</a>
       or <a href="https://www.spathiswellbeing.com/contact" target="_blank" rel="noopener">book a conversation</a>.
     </p>
-    <p style="font-size:12.5px;color:var(--ink-soft);margin-top:14px;">Pathway recommendation: ${pw.name}</p>
+    <p style="font-size:12.5px;color:var(--ink-soft);margin-top:14px;">Suggested starting point: ${pw.name}</p>
   `;
 }
 
