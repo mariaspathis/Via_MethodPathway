@@ -27,3 +27,8 @@ The numerical Via Map remains available only in the optional client-controlled s
 
 ## Important
 The pathway messages use reflective language such as “suggest”, “may” and “if this feels like the right place to begin.” The reflection is a guide to a possible starting point, not a diagnostic assessment.
+
+## Latest final-section changes
+- Removed the pathway-card “Ready to take the next step?” / booking prompt.
+- Removed the small “Suggested starting point” line underneath the pathway card.
+- Updated the sharing explanation to: “The email will open first so you can review it before sending.”
