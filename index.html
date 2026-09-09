@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Spathis Via Method Reflection v11 -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Where Do I Begin? | A Via Method Reflection</title>
@@ -257,6 +258,20 @@
       }
     }
 
+
+    .scale-reminder{
+      margin:4px 0 16px;
+      font-size:13.5px;
+      line-height:1.5;
+      color:var(--ink-soft);
+    }
+    @media(max-width:640px){
+      .scale-reminder{
+        font-size:13px;
+        margin-bottom:14px;
+      }
+    }
+
 </style>
 </head>
 <body>
@@ -276,7 +291,7 @@
     <div class="hero">
       <p class="kicker">A Via Method Reflection</p>
       <h1>Where Do I Begin?</h1>
-      <p>Take a moment to notice where you are now and discover which Via Method pathway may be the most supportive place to begin.</p><p class="intro-two-parts" style="font-size:14.5px;color:var(--ink-soft);margin-top:10px;">This reflection has two parts with 48 statements in total. There are no right or wrong answers — simply choose the response that feels closest to your experience right now.<br><br><b>Answer for where you are now, rather than where you think you should be.</b></p>
+      <p>Take a moment to notice where you are now and discover which Via Method pathway may be the most supportive place to begin.</p><p class="intro-two-parts" style="font-size:14.5px;color:var(--ink-soft);margin-top:10px;">This reflection is completed in two parts, with short sections along the way. There are no right or wrong answers — simply choose the response that feels closest to your experience right now.<br><br><b>Answer for where you are now, rather than where you think you should be.</b></p>
 
       <h3>The purpose</h3>
       <p>Loss can change more than how you feel. It can affect your body, relationships, sense of safety, identity, meaning and the way you imagine your future.</p>
@@ -345,7 +360,7 @@
     <h2 class="part-title">Part one: Your Via Landscape</h2>
     <p class="part-sub">Explore where loss or change may be affecting you right now, and what may need greater support, care or steadiness.</p>
     <div id="p1-domains"></div>
-    <p class="err-msg" id="p1-err">A few statements above still need a response before you can continue.</p>
+    <p class="err-msg" id="p1-err">One or more responses are still waiting before you can continue.</p>
     <div class="actions">
       <button class="btn ghost" onclick="backP1()">Back</button>
       <button class="btn primary" id="p1-next-btn" onclick="nextP1()">Next</button>
@@ -360,7 +375,7 @@
     <h2 class="part-title">Part two: Your Identity Map</h2>
     <p class="part-sub">Explore how loss or change may be shaping your sense of self, relationships, meaning and the life ahead.</p>
     <div id="p2-domains"></div>
-    <p class="err-msg" id="p2-err">A few statements above still need a response before you can continue.</p>
+    <p class="err-msg" id="p2-err">One or more responses are still waiting before you can continue.</p>
     <div class="actions">
       <button class="btn ghost" onclick="backP2()">Back</button>
       <button class="btn primary" id="p2-next-btn" onclick="nextP2()">Next</button>
@@ -387,9 +402,9 @@
       </div>
 
       <div style="margin-bottom:18px;">
-        <p style="margin:0 0 6px;"><b>Share my Via Map</b></p>
+        <p style="margin:0 0 6px;"><b>Share my reflection with Maria</b></p>
         <p style="font-size:13.5px;line-height:1.5;margin:0 0 10px;">Share a summary of the reflection with Maria before making contact. This can help provide a clearer picture of what may need support and where it may be most helpful to begin. The email will open first so it can be reviewed before sending.</p>
-        <button class="btn ghost" onclick="shareByEmail()" style="text-align:center;">Share my Via Map with Spathis Wellbeing</button>
+        <button class="btn ghost" onclick="shareByEmail()" style="text-align:center;">Share my reflection with Maria</button>
       </div>
 
       <button class="btn ghost" onclick="goTo('part2')" style="text-align:center;">Back</button>
@@ -527,6 +542,11 @@ function buildDomains(container, sections, prefix){
     labelEl.className = 'domain-label';
     labelEl.textContent = sec.label;
     domain.appendChild(labelEl);
+
+    const scaleReminder = document.createElement('div');
+    scaleReminder.className = 'scale-reminder';
+    scaleReminder.textContent = '0 Not at all · 1 A little · 2 Quite a lot · 3 Very much';
+    domain.appendChild(scaleReminder);
     sec.q.forEach(text => {
       qIndex++;
       const name = prefix + '_' + qIndex;
@@ -557,7 +577,10 @@ const SECTIONS_PER_PART = 6;
 function showSection(prefix, idx){
   const domains = document.querySelectorAll('#'+prefix+'-domains .domain');
   domains.forEach((d,i) => d.classList.toggle('section-active', i === idx));
-  const partName = prefix === 'p1' ? 'Part 1 of 2 — Support · 24 statements' : 'Part 2 of 2 — Identity · 24 statements';
+  const areaLabel = domains[idx]?.querySelector('.domain-label')?.textContent || '';
+  const partName = prefix === 'p1'
+    ? `Your Via Landscape · ${areaLabel} · ${idx + 1} of 6`
+    : `Your Identity Map · ${areaLabel} · ${idx + 1} of 6`;
   document.getElementById(prefix+'-progress-label').textContent =
     partName + ' \u2014 section ' + (idx+1) + ' of ' + SECTIONS_PER_PART;
   document.getElementById(prefix+'-progress-fill').style.width =
@@ -785,7 +808,7 @@ function shareByEmail(){
   const subject = 'My Via Method Reflection — ' + p.name;
   const body =
     'Hi Maria,\n\n' +
-    'I completed the Via Method reflection and would like to share my Via Map with you.\n\n' +
+    'I completed the Via Method reflection and would like to share my reflection with you.\n\n' +
     'SUGGESTED STARTING POINT\n' +
     p.name + '\n\n' +
 
