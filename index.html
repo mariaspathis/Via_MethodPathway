@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Spathis Via Method Reflection v12-live-fix -->
   <!-- Spathis Via Method Reflection v11 -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -269,6 +270,53 @@
       .scale-reminder{
         font-size:13px;
         margin-bottom:14px;
+      }
+    }
+
+
+    /* v12: consistent desktop/mobile progress + mobile tap targets */
+    .scale-reminder{
+      margin:4px 0 16px;
+      font-size:13.5px;
+      line-height:1.5;
+      color:var(--ink-soft);
+    }
+
+    @media(max-width:640px){
+      .scale-reminder{
+        font-size:13px !important;
+        line-height:1.45 !important;
+        margin:4px 0 14px !important;
+      }
+
+      .scale{
+        display:grid !important;
+        grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+        gap:8px !important;
+        width:100% !important;
+      }
+
+      .opt{
+        width:100% !important;
+        min-width:0 !important;
+      }
+
+      .opt span{
+        width:100% !important;
+        height:56px !important;
+        min-height:56px !important;
+        display:flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        border-radius:8px !important;
+        font-size:19px !important;
+        font-weight:500 !important;
+        box-sizing:border-box !important;
+      }
+
+      .opt input{
+        width:100% !important;
+        height:56px !important;
       }
     }
 
@@ -577,12 +625,13 @@ const SECTIONS_PER_PART = 6;
 function showSection(prefix, idx){
   const domains = document.querySelectorAll('#'+prefix+'-domains .domain');
   domains.forEach((d,i) => d.classList.toggle('section-active', i === idx));
-  const areaLabel = domains[idx]?.querySelector('.domain-label')?.textContent || '';
+  const areaLabel = (domains[idx]?.querySelector('.domain-label')?.textContent || '')
+    .replace(/^\d+\s*[—-]\s*/, '')
+    .trim();
   const partName = prefix === 'p1'
     ? `Your Via Landscape · ${areaLabel} · ${idx + 1} of 6`
     : `Your Identity Map · ${areaLabel} · ${idx + 1} of 6`;
-  document.getElementById(prefix+'-progress-label').textContent =
-    partName + ' \u2014 section ' + (idx+1) + ' of ' + SECTIONS_PER_PART;
+  document.getElementById(prefix+'-progress-label').textContent = partName;
   document.getElementById(prefix+'-progress-fill').style.width =
     Math.round((idx/SECTIONS_PER_PART)*100) + '%';
   const nextBtn = document.getElementById(prefix+'-next-btn');
