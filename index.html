@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Spathis Via Method Reflection v14-scale-text -->
   <!-- Spathis Via Method Reflection v13-scale-clarity -->
   <!-- Spathis Via Method Reflection v12-live-fix -->
   <!-- Spathis Via Method Reflection v11 -->
@@ -354,6 +355,45 @@
         text-align:left;
         padding:7px 9px;
         font-size:12.5px;
+      }
+    }
+
+
+    /* v14: scale guide is plain text, not button-like */
+    .scale-reminder{
+      display:flex !important;
+      flex-wrap:wrap !important;
+      gap:6px 18px !important;
+      margin:6px 0 18px !important;
+      padding:0 !important;
+    }
+    .scale-reminder span{
+      display:inline !important;
+      width:auto !important;
+      text-align:left !important;
+      padding:0 !important;
+      border:0 !important;
+      border-radius:0 !important;
+      background:transparent !important;
+      box-shadow:none !important;
+      font-size:13px !important;
+      line-height:1.5 !important;
+      color:var(--ink-soft) !important;
+    }
+    .scale-reminder b{
+      font-size:13px !important;
+      color:var(--ink) !important;
+      font-weight:600 !important;
+    }
+    @media(max-width:640px){
+      .scale-reminder{
+        display:grid !important;
+        grid-template-columns:1fr 1fr !important;
+        gap:4px 14px !important;
+        margin:6px 0 16px !important;
+      }
+      .scale-reminder span{
+        font-size:13px !important;
       }
     }
 
