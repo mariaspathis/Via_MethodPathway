@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Spathis Via Method Reflection v17-final-audit-fixes -->
   <!-- Spathis Via Method Reflection v16-pathway-logic -->
   <!-- Spathis Via Method Reflection v15-kind-neutral -->
   <!-- Spathis Via Method Reflection v15-scoring-refinement -->
@@ -520,7 +521,7 @@
     <div class="share-panel" style="margin-top:28px;">
       <h3 style="font-family:var(--serif);font-weight:500;font-size:19px;margin:0 0 10px;">What would you like to do next?</h3>
       <p style="font-size:14.5px;line-height:1.6;margin:0 0 18px;">
-        You can book a conversation without sharing your Via Map, or choose to send Maria a summary of your reflection before you speak.
+        You can book a conversation without sharing your reflection, or choose to send Maria a summary before you speak.
       </p>
 
       <div style="margin-bottom:18px;">
@@ -722,7 +723,7 @@ function showSection(prefix, idx){
     : `Your Identity Map · ${areaLabel} · ${idx + 1} of 6`;
   document.getElementById(prefix+'-progress-label').textContent = partName;
   document.getElementById(prefix+'-progress-fill').style.width =
-    Math.round((idx/SECTIONS_PER_PART)*100) + '%';
+    Math.round(((idx + 1)/SECTIONS_PER_PART)*100) + '%';
   const nextBtn = document.getElementById(prefix+'-next-btn');
   if(idx === SECTIONS_PER_PART - 1){
     nextBtn.textContent = prefix === 'p1' ? 'Continue to part two' : 'See your response';
@@ -833,25 +834,32 @@ function getAnswers(prefix, total){
 function sum(arr){ return arr.reduce((a,b)=>a+b,0); }
 
 /*
-  PATHWAY GUIDANCE LOGIC
+  PATHWAY GUIDANCE LOGIC — v17
 
-  These are routing rules for a reflective tool, not validated clinical thresholds.
+  These are reflective routing rules, not validated clinical or psychometric
+  thresholds.
 
-  1. Grounded Support has first priority when current support / steadiness needs
-     are clearly elevated.
+  Grounded Support:
+    - Support total >= 40; OR
+    - Support total >= 33 with at least 2 Support areas >= 8; OR
+    - at least 2 Support areas >= 10.
 
-  2. If Grounded Support is not indicated, The Way Forward requires a pattern
-     of forward integration:
-       - at least 2 of Q16, Q20 and Q24 score 2–3; AND
-       - at least 2 of Q14, Q15 and Q23 score 2–3.
+  Very high identity disruption safeguard:
+    - disruption-focused Part 2 subtotal >= 36/54 -> The Unfolding.
 
-  3. If that forward-integration pattern is not present, substantial identity
-     disruption / exploration points toward The Unfolding.
+  The Way Forward:
+    - at least 2 of Q16, Q20, Q24 score 2–3; AND
+    - at least 2 of Q14, Q15, Q23 score 2–3.
 
-  4. If no pathway is strongly supported, give the kinder exploration response.
+  The Unfolding:
+    - Identity total >= 40; OR
+    - Identity total >= 33 with at least 2 Identity areas >= 8.
 
-  These rules guide a Via Method starting point. They are not clinical or
-  psychometric measures.
+  Otherwise:
+    - neutral exploration response.
+
+  This logic is designed to choose a suggested starting point, not diagnose,
+  stage, or clinically classify grief.
 */
 function getDomainScores(answers){
   const scores = [];
@@ -868,40 +876,68 @@ function computePathway(p1, p2){
   const supportAreas = getDomainScores(p1);
   const identityAreas = getDomainScores(p2);
 
-  const concentratedSupport = supportAreas.filter(score => score >= 8).length >= 2;
-  const concentratedIdentity = identityAreas.filter(score => score >= 8).length >= 2;
+  const elevatedSupportAreas = supportAreas.filter(score => score >= 8).length;
+  const veryHighSupportAreas = supportAreas.filter(score => score >= 10).length;
+  const elevatedIdentityAreas = identityAreas.filter(score => score >= 8).length;
 
   /*
-    1. GROUNDED SUPPORT
-    Current support / steadiness needs keep first priority.
+    FINAL ROUTING PRINCIPLES
+
+    These are reflective routing rules, not validated clinical or psychometric
+    thresholds.
+
+    1. GROUNDED SUPPORT has first priority when current support / steadiness
+       needs are broad OR when two support areas are very strongly elevated.
+
+    2. If Grounded Support is not indicated, protect against sending someone
+       with very high identity disruption straight to The Way Forward.
+
+    3. THE WAY FORWARD requires a genuine pattern of forward integration:
+       at least 2 forward indicators AND at least 2 bridge indicators at 2–3.
+
+    4. THE UNFOLDING is used when identity disruption / exploration is
+       substantial but the forward-integration pattern is not the stronger
+       starting point.
+
+    5. Otherwise, use the neutral exploration response rather than forcing
+       a pathway.
   */
+
+  // ---- 1. GROUNDED SUPPORT ----
   const groundedIndicated =
     supportTotal >= 40 ||
-    (supportTotal >= 33 && concentratedSupport);
+    (supportTotal >= 33 && elevatedSupportAreas >= 2) ||
+    veryHighSupportAreas >= 2;
 
   if(groundedIndicated){
     return 'grounded';
   }
 
-  /*
-    2. THE WAY FORWARD
-    Look for a genuine pattern of integration / forward orientation rather
-    than using this pathway as the default when other scores are low.
+  // ---- 2. VERY HIGH IDENTITY DISRUPTION SAFEGUARD ----
+  // These Part 2 items primarily reflect identity disruption, uncertainty,
+  // changed roles/belonging, or difficulty imagining the future.
+  const disruptionIndexes = [
+    0,1,2,3,        // Q1–Q4: Who I Was
+    4,5,6,7,        // Q5–Q8: Who I Am Now
+    8,9,10,11,      // Q9–Q12: Roles & Relationships
+    12,              // Q13: meaning has changed
+    16,17,18,        // Q17–Q19: Belonging disruption
+    20,21            // Q21–Q22: future disruption
+  ];
 
-    Forward indicators:
-      Q16 = what I want to carry forward
-      Q20 = recognising parts of myself that still feel meaningful / true
-      Q24 = a way forward that honours what happened while life continues
+  const disruptionTotal = disruptionIndexes
+    .reduce((total, i) => total + Number(p2[i] || 0), 0);
 
-    Bridge indicators:
-      Q14 = questioning / exploring what matters now
-      Q15 = beginning to understand current values / priorities
-      Q23 = tension around moving forward and leaving something behind
+  // 18 disruption items, maximum 54.
+  // A subtotal of 36 means an average response of 2 ("Quite a lot")
+  // across this disruption-focused set.
+  const veryHighIdentityDisruption = disruptionTotal >= 36;
 
-    A Way Forward pattern requires:
-      - at least 2 of the 3 forward indicators scoring 2 or 3; AND
-      - at least 2 of the 3 bridge indicators scoring 2 or 3.
-  */
+  if(veryHighIdentityDisruption){
+    return 'unfolding';
+  }
+
+  // ---- 3. THE WAY FORWARD ----
   const forwardIndexes = [15, 19, 23]; // Q16, Q20, Q24
   const bridgeIndexes = [13, 14, 22];  // Q14, Q15, Q23
 
@@ -916,24 +952,16 @@ function computePathway(p1, p2){
     return 'wayforward';
   }
 
-  /*
-    3. THE UNFOLDING
-    If forward integration is not yet the stronger pattern, substantial
-    identity disruption / exploration points toward The Unfolding.
-  */
+  // ---- 4. THE UNFOLDING ----
   const unfoldingIndicated =
     identityTotal >= 40 ||
-    (identityTotal >= 33 && concentratedIdentity);
+    (identityTotal >= 33 && elevatedIdentityAreas >= 2);
 
   if(unfoldingIndicated){
     return 'unfolding';
   }
 
-  /*
-    4. EXPLORATION
-    Do not force a pathway when the response pattern does not strongly
-    support one of the three.
-  */
+  // ---- 5. EXPLORATION ----
   return 'neutral';
 }
 

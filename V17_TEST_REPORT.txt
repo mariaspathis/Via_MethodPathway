@@ -1,0 +1,26 @@
+Spathis Via Method Reflection v17 — final audit fixes
+
+Implemented:
+1. Very high identity disruption safeguard before Way Forward.
+2. Grounded Support also triggers when at least two support areas score 10–12.
+3. Progress bar now reaches 100% on section 6 of 6.
+4. Remaining 'Via Map' wording replaced with 'reflection'.
+
+Routing order:
+Grounded Support -> Very high identity disruption safeguard -> Way Forward -> The Unfolding -> Exploration.
+
+Deterministic tests passed:
+- All 0: support 0/72, identity 0/72 -> neutral
+- All 1: support 24/72, identity 24/72 -> neutral
+- All 2: support 48/72, identity 48/72 -> grounded
+- All 3: support 72/72, identity 72/72 -> grounded
+- Two support areas at 10: support 20/72, identity 0/72 -> grounded
+- One support area at 10 only: support 10/72, identity 0/72 -> neutral
+- Clear Way Forward: support 0/72, identity 8/72 -> wayforward
+- Very high disruption + forward pattern: support 0/72, identity 54/72 -> unfolding
+- High identity disruption, weak forward: support 0/72, identity 36/72 -> unfolding
+- Moderate identity + integration: support 0/72, identity 17/72 -> wayforward
+- Grounded overrides forward: support 48/72, identity 17/72 -> grounded
+- Disruption just below safeguard + integration: support 0/72, identity 47/72 -> wayforward
+
+Progress values: 17 -> 33 -> 50 -> 67 -> 83 -> 100%
