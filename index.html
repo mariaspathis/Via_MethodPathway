@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Spathis Via Method Reflection v15-kind-neutral -->
+  <!-- Spathis Via Method Reflection v15-scoring-refinement -->
   <!-- Spathis Via Method Reflection v14-scale-text -->
   <!-- Spathis Via Method Reflection v13-scale-clarity -->
   <!-- Spathis Via Method Reflection v12-live-fix -->
@@ -654,6 +656,15 @@ const PATHWAYS = {
     body: "Your responses suggest that you may be ready to look more closely at how this experience becomes part of the life you are living now.",
     meaning: "Moving forward does not mean leaving behind what happened, what was lost or who you were. The Way Forward creates space to explore what matters now, what you want to carry with you and how life can continue in a way that honours both what has been and what is still possible.",
     invitation: "The way forward is not about moving on. It is about finding a way to live with what remains while allowing life to keep unfolding."
+  },
+  neutral: {
+    number: null,
+    name: "Your starting point may need a little more exploration",
+    question: "What might be most helpful from here?",
+    focus: "Exploration · Clarifying · Conversation",
+    body: "Your responses suggest that your needs may be spread across different areas, rather than pointing strongly toward one Via Method pathway right now.",
+    meaning: "Loss and change do not always fit neatly into one place. Your responses may reflect needs that are mixed, changing, or spread across different areas. A conversation with Maria may help you explore what is happening for you and decide which kind of support would feel most useful.",
+    invitation: "Suggested next step: Book a conversation with Maria."
   }
 };
 
@@ -825,21 +836,26 @@ function sum(arr){ return arr.reduce((a,b)=>a+b,0); }
   Each part has 24 responses scored 0–3 (maximum 72).
   Each area contains four responses (maximum 12).
 
-  The totals are interpreted in bands rather than using one hard cut-off.
-  In a middle band, the pattern across individual areas helps decide the starting point.
+  These are routing rules for a reflective tool, not validated clinical thresholds.
 
-  Grounded Support:
-    - Support total 40–72; OR
-    - Support total 33–39 with at least two Support areas scoring 8–12.
+  1. Grounded Support has priority when current support / steadiness needs are clearly elevated:
+     - Support total 40–72; OR
+     - Support total 33–39 with at least two Support areas scoring 8–12.
 
-  The Unfolding (when Grounded Support is not indicated):
-    - Identity total 40–72; OR
-    - Identity total 33–39 with at least two Identity areas scoring 8–12.
+  2. The Unfolding is considered when Grounded Support is not indicated:
+     - Identity total 40–72; OR
+     - Identity total 33–39 with at least two Identity areas scoring 8–12.
 
-  The Way Forward:
-    - Used when neither of the above patterns is present.
+  3. The Way Forward is NOT used as a fallback.
+     It requires explicit forward-facing readiness in two items:
+       - Part 2, item 16: "I am trying to understand what I want to carry forward..."
+       - Part 2, item 24: "I want to find a way forward..."
+     Both items must score 2 or 3, and neither Grounded Support nor The Unfolding can already be indicated.
 
-  This is a reflective pathway guide, not a diagnostic or clinical severity score.
+  4. If none of the above patterns is present, return a neutral reflection:
+     "No single pathway stands out yet."
+
+  This prevents very low scores from automatically becoming The Way Forward.
 */
 function getDomainScores(answers){
   const scores = [];
@@ -859,28 +875,80 @@ function computePathway(p1, p2){
   const concentratedSupport = supportAreas.filter(score => score >= 8).length >= 2;
   const concentratedIdentity = identityAreas.filter(score => score >= 8).length >= 2;
 
-  if(supportTotal >= 40 || (supportTotal >= 33 && concentratedSupport)){
+  const groundedIndicated =
+    supportTotal >= 40 ||
+    (supportTotal >= 33 && concentratedSupport);
+
+  if(groundedIndicated){
     return 'grounded';
   }
 
-  if(identityTotal >= 40 || (identityTotal >= 33 && concentratedIdentity)){
+  const unfoldingIndicated =
+    identityTotal >= 40 ||
+    (identityTotal >= 33 && concentratedIdentity);
+
+  if(unfoldingIndicated){
     return 'unfolding';
   }
 
-  return 'wayforward';
+  // p2[15] = item 16 ("carry forward"); p2[23] = item 24 ("find a way forward")
+  const forwardReadiness =
+    Number(p2[15]) >= 2 &&
+    Number(p2[23]) >= 2;
+
+  if(forwardReadiness){
+    return 'wayforward';
+  }
+
+  return 'neutral';
 }
 
-function strongestAreas(p1, p2){
+function highlightedAreas(p1, p2){
   const supportNames = ['Safety','Kindness','Care','The Body','Feelings, Emotions & Thoughts','Sharing'];
   const identityNames = ['Who I Was','Who I Am Now','Roles & Relationships','What Matters Now','Belonging','The Life Ahead'];
   const supportScores = getDomainScores(p1);
   const identityScores = getDomainScores(p2);
 
-  return supportNames.map((name, i) => ({name, score:supportScores[i]}))
-    .concat(identityNames.map((name, i) => ({name, score:identityScores[i]})))
-    .sort((a,b) => b.score - a.score)
-    .slice(0,3)
-    .map(item => item.name);
+  const all = supportNames.map((name, i) => ({name, score:supportScores[i], order:i}))
+    .concat(identityNames.map((name, i) => ({name, score:identityScores[i], order:6+i})));
+
+  const meaningful = all.filter(item => item.score >= 6);
+
+  if(meaningful.length === 0){
+    return {
+      type: 'none',
+      text: 'Your responses did not strongly highlight one particular area.'
+    };
+  }
+
+  const uniqueScores = [...new Set(meaningful.map(item => item.score))];
+
+  // If every meaningful area is tied, do not invent a "top three".
+  if(uniqueScores.length === 1 && meaningful.length > 1){
+    return {
+      type: 'even',
+      text: 'Your responses were relatively even across several areas.'
+    };
+  }
+
+  meaningful.sort((a,b) => (b.score - a.score) || (a.order - b.order));
+  const topScore = meaningful[0].score;
+  const topTied = meaningful.filter(item => item.score === topScore);
+
+  // If more than three areas share the highest score, name no arbitrary three.
+  if(topTied.length > 3){
+    return {
+      type: 'even',
+      text: 'Your responses highlighted several areas at a similar level.'
+    };
+  }
+
+  const selected = meaningful.slice(0,3).map(item => item.name);
+  return {
+    type: 'areas',
+    names: selected,
+    text: `Your reflection particularly highlighted: ${selected.join(", ")}.`
+  };
 }
 
 function computeResponse(){
@@ -888,7 +956,8 @@ function computeResponse(){
   const p2 = getAnswers('p2', 24);
   const key = computePathway(p1, p2);
   const pw = PATHWAYS[key];
-  const strongest = strongestAreas(p1, p2);
+  const highlight = highlightedAreas(p1, p2);
+
   window.__lastPathwayKey = key;
   window.__lastP1 = p1;
   window.__lastP2 = p2;
@@ -896,16 +965,22 @@ function computeResponse(){
   window.__identityMapScore = sum(p2);
 
   const tagWrap = document.getElementById('response-tag-wrap');
-  tagWrap.innerHTML = `<span class="response-tag">Your suggested pathway</span>`;
+  tagWrap.innerHTML = key === 'neutral'
+    ? `<span class="response-tag">Your suggested next step</span>`
+    : `<span class="response-tag">Your suggested pathway</span>`;
 
   const card = document.getElementById('pathway-card');
+  const heading = pw.number
+    ? `<p class="pathway-num">${pw.number}. ${pw.name.toUpperCase()}</p>`
+    : `<p class="pathway-num">${pw.name.toUpperCase()}</p>`;
+
   card.innerHTML = `
-    <p class="pathway-num">${pw.number}. ${pw.name.toUpperCase()}</p>
+    ${heading}
     <p style="font-family:var(--serif);font-size:19px;margin:7px 0 12px;"><i>${pw.question}</i></p>
     <p class="pathway-focus"><b>Focus:</b> ${pw.focus}</p>
     <p class="pathway-body">${pw.body}</p>
     <p class="pathway-meaning"><b>What this may mean for you:</b> ${pw.meaning}</p>
-    <p class="pathway-body"><b>Your reflection particularly highlighted:</b> ${strongest.join(", ")}.</p>
+    <p class="pathway-body"><b>${highlight.text}</b></p>
     <p class="pathway-meaning" style="margin-top:16px;"><i>${pw.invitation}</i></p>
   `;
 }
@@ -935,7 +1010,7 @@ function shareByEmail(){
   const body =
     'Hi Maria,\n\n' +
     'I completed the Via Method reflection and would like to share my reflection with you.\n\n' +
-    'SUGGESTED STARTING POINT\n' +
+    (key === 'neutral' ? 'REFLECTION SUMMARY\n' : 'SUGGESTED STARTING POINT\n') +
     p.name + '\n\n' +
 
     'SUPPORT MAP\n' +
