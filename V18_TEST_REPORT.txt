@@ -1,0 +1,18 @@
+Via Method Reflection v18 — dominant therapeutic task routing
+
+All deterministic routing tests passed.
+
+- All zeros: neutral
+- All ones: neutral
+- All twos: unfolding
+- All threes: grounded
+- User example: unfolding
+- Support 47 identity low: grounded
+- Two concentrated support areas: grounded
+- Clear Way Forward: wayforward
+- Immediate Grounded overrides forward: grounded
+- Integration plus some identity difficulty: wayforward
+
+Your live-test example (Support 47/72, Identity 58/72) now routes to The Unfolding.
+
+These thresholds are Via Method routing rules, not validated psychometric or diagnostic cut-offs.

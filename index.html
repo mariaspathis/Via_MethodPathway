@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Spathis Via Method Reflection v17-final-audit-fixes -->
+  <!-- Spathis Via Method Reflection v18-dominant-therapeutic-task -->
   <!-- Spathis Via Method Reflection v16-pathway-logic -->
   <!-- Spathis Via Method Reflection v15-kind-neutral -->
   <!-- Spathis Via Method Reflection v15-scoring-refinement -->
@@ -834,32 +834,39 @@ function getAnswers(prefix, total){
 function sum(arr){ return arr.reduce((a,b)=>a+b,0); }
 
 /*
-  PATHWAY GUIDANCE LOGIC — v17
+  PATHWAY GUIDANCE LOGIC — v18
 
-  These are reflective routing rules, not validated clinical or psychometric
-  thresholds.
+  The pathway represents the dominant therapeutic task rather than simply
+  whichever map crosses a threshold first.
 
-  Grounded Support:
+  Immediate Grounded priority:
+    - Support total >= 54/72; OR
+    - at least 3 Support areas >= 10/12.
+
+  Broad identity disruption -> The Unfolding:
+    - disruption-focused subtotal >= 36/54; OR
+    - Identity total >= 40/72 with at least 4 Identity areas >= 8/12.
+
+  The Way Forward:
+    - at least 2 of Q16, Q20, Q24 score 2–3; AND
+    - at least 2 of Q14, Q15, Q23 score 2–3;
+    - only after immediate Grounded priority and broad identity disruption
+      have been ruled out.
+
+  Broader Grounded Support:
     - Support total >= 40; OR
     - Support total >= 33 with at least 2 Support areas >= 8; OR
     - at least 2 Support areas >= 10.
 
-  Very high identity disruption safeguard:
-    - disruption-focused Part 2 subtotal >= 36/54 -> The Unfolding.
-
-  The Way Forward:
-    - at least 2 of Q16, Q20, Q24 score 2–3; AND
-    - at least 2 of Q14, Q15, Q23 score 2–3.
-
-  The Unfolding:
+  Broader Unfolding:
     - Identity total >= 40; OR
     - Identity total >= 33 with at least 2 Identity areas >= 8.
 
   Otherwise:
     - neutral exploration response.
 
-  This logic is designed to choose a suggested starting point, not diagnose,
-  stage, or clinically classify grief.
+  These are Via Method routing rules, not validated clinical or psychometric
+  cut-offs.
 */
 function getDomainScores(answers){
   const scores = [];
@@ -881,63 +888,28 @@ function computePathway(p1, p2){
   const elevatedIdentityAreas = identityAreas.filter(score => score >= 8).length;
 
   /*
-    FINAL ROUTING PRINCIPLES
+    VIA METHOD ROUTING — v18
 
-    These are reflective routing rules, not validated clinical or psychometric
-    thresholds.
+    PURPOSE
+    This reflection suggests a starting point within the Via Method. It does
+    not diagnose grief, measure clinical severity, or decide that one need
+    must be completed before another can be explored.
 
-    1. GROUNDED SUPPORT has first priority when current support / steadiness
-       needs are broad OR when two support areas are very strongly elevated.
+    PRINCIPLE
+    The primary pathway represents the dominant therapeutic task.
+    Grounding/support needs can coexist with identity work and are still
+    reflected in the person's Via Landscape.
 
-    2. If Grounded Support is not indicated, protect against sending someone
-       with very high identity disruption straight to The Way Forward.
-
-    3. THE WAY FORWARD requires a genuine pattern of forward integration:
-       at least 2 forward indicators AND at least 2 bridge indicators at 2–3.
-
-    4. THE UNFOLDING is used when identity disruption / exploration is
-       substantial but the forward-integration pattern is not the stronger
-       starting point.
-
-    5. Otherwise, use the neutral exploration response rather than forcing
-       a pathway.
+    ROUTING ORDER
+    1. Immediate / concentrated Grounded Support priority
+    2. Broad identity disruption -> The Unfolding
+    3. Clear forward-integration pattern -> The Way Forward
+    4. Broader Grounded Support pattern
+    5. Broader identity pattern -> The Unfolding
+    6. Exploration when no pathway is sufficiently clear
   */
 
-  // ---- 1. GROUNDED SUPPORT ----
-  const groundedIndicated =
-    supportTotal >= 40 ||
-    (supportTotal >= 33 && elevatedSupportAreas >= 2) ||
-    veryHighSupportAreas >= 2;
-
-  if(groundedIndicated){
-    return 'grounded';
-  }
-
-  // ---- 2. VERY HIGH IDENTITY DISRUPTION SAFEGUARD ----
-  // These Part 2 items primarily reflect identity disruption, uncertainty,
-  // changed roles/belonging, or difficulty imagining the future.
-  const disruptionIndexes = [
-    0,1,2,3,        // Q1–Q4: Who I Was
-    4,5,6,7,        // Q5–Q8: Who I Am Now
-    8,9,10,11,      // Q9–Q12: Roles & Relationships
-    12,              // Q13: meaning has changed
-    16,17,18,        // Q17–Q19: Belonging disruption
-    20,21            // Q21–Q22: future disruption
-  ];
-
-  const disruptionTotal = disruptionIndexes
-    .reduce((total, i) => total + Number(p2[i] || 0), 0);
-
-  // 18 disruption items, maximum 54.
-  // A subtotal of 36 means an average response of 2 ("Quite a lot")
-  // across this disruption-focused set.
-  const veryHighIdentityDisruption = disruptionTotal >= 36;
-
-  if(veryHighIdentityDisruption){
-    return 'unfolding';
-  }
-
-  // ---- 3. THE WAY FORWARD ----
+  // ---- FORWARD / INTEGRATION PATTERN ----
   const forwardIndexes = [15, 19, 23]; // Q16, Q20, Q24
   const bridgeIndexes = [13, 14, 22];  // Q14, Q15, Q23
 
@@ -948,11 +920,62 @@ function computePathway(p1, p2){
     forwardCount >= 2 &&
     bridgeCount >= 2;
 
+  // ---- IDENTITY DISRUPTION PATTERN ----
+  // Q1–Q13, Q17–Q19 and Q21–Q22 focus primarily on disruption,
+  // uncertainty, changed roles/belonging and difficulty imagining the future.
+  const disruptionIndexes = [
+    0,1,2,3,
+    4,5,6,7,
+    8,9,10,11,
+    12,
+    16,17,18,
+    20,21
+  ];
+
+  const disruptionTotal = disruptionIndexes
+    .reduce((total, i) => total + Number(p2[i] || 0), 0);
+
+  // 18 questions, maximum 54.
+  const broadIdentityDisruption =
+    disruptionTotal >= 36 ||
+    (identityTotal >= 40 && elevatedIdentityAreas >= 4);
+
+  // ---- 1. IMMEDIATE / CONCENTRATED GROUNDED PRIORITY ----
+  // Grounded Support should override identity work only when support needs
+  // are exceptionally broad or highly concentrated.
+  const immediateGroundedPriority =
+    supportTotal >= 54 ||
+    veryHighSupportAreas >= 3;
+
+  if(immediateGroundedPriority){
+    return 'grounded';
+  }
+
+  // ---- 2. THE UNFOLDING: BROAD IDENTITY DISRUPTION ----
+  // A broad identity pattern is treated as the dominant therapeutic task,
+  // even when meaningful grounding/support needs coexist.
+  if(broadIdentityDisruption){
+    return 'unfolding';
+  }
+
+  // ---- 3. THE WAY FORWARD ----
+  // Forward integration is considered only after ruling out immediate
+  // Grounded priority and broad identity disruption.
   if(wayForwardIndicated){
     return 'wayforward';
   }
 
-  // ---- 4. THE UNFOLDING ----
+  // ---- 4. BROADER GROUNDED SUPPORT ----
+  const groundedIndicated =
+    supportTotal >= 40 ||
+    (supportTotal >= 33 && elevatedSupportAreas >= 2) ||
+    veryHighSupportAreas >= 2;
+
+  if(groundedIndicated){
+    return 'grounded';
+  }
+
+  // ---- 5. THE UNFOLDING: BROADER IDENTITY PATTERN ----
   const unfoldingIndicated =
     identityTotal >= 40 ||
     (identityTotal >= 33 && elevatedIdentityAreas >= 2);
@@ -961,7 +984,7 @@ function computePathway(p1, p2){
     return 'unfolding';
   }
 
-  // ---- 5. EXPLORATION ----
+  // ---- 6. EXPLORATION ----
   return 'neutral';
 }
 
