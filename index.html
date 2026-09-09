@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Spathis Via Method Reflection v13-scale-clarity -->
   <!-- Spathis Via Method Reflection v12-live-fix -->
   <!-- Spathis Via Method Reflection v11 -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Where Do I Begin? | A Via Method Reflection</title>
+<title>Where Do I Begin? | Via Method Reflection Tool</title>
 <meta name="description" content="A gentle Via Method reflection to help you notice where you are now and find a supportive place to begin.">
 <link rel="icon" type="image/jpeg" href="https://storage.tally.so/bed7a86a-946d-4fcf-8748-f739c5becb54/Spiral.jpg">
 <meta name="robots" content="noindex,nofollow">
@@ -320,6 +321,42 @@
       }
     }
 
+
+    /* v13: clearer response scale */
+    .scale-reminder{
+      display:grid !important;
+      grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+      gap:8px !important;
+      margin:6px 0 18px !important;
+    }
+    .scale-reminder span{
+      display:block;
+      text-align:center;
+      padding:7px 5px;
+      border:1px solid var(--line);
+      border-radius:6px;
+      background:#fff;
+      font-size:12.5px;
+      line-height:1.35;
+      color:var(--ink-soft);
+    }
+    .scale-reminder b{
+      color:var(--ink);
+      font-size:14px;
+    }
+    @media(max-width:640px){
+      .scale-reminder{
+        grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+        gap:6px !important;
+        margin:6px 0 16px !important;
+      }
+      .scale-reminder span{
+        text-align:left;
+        padding:7px 9px;
+        font-size:12.5px;
+      }
+    }
+
 </style>
 </head>
 <body>
@@ -337,7 +374,7 @@
 
   <section class="screen active" id="screen-intro">
     <div class="hero">
-      <p class="kicker">A Via Method Reflection</p>
+      <p class="kicker">Via Method Reflection Tool</p>
       <h1>Where Do I Begin?</h1>
       <p>Take a moment to notice where you are now and discover which Via Method pathway may be the most supportive place to begin.</p><p class="intro-two-parts" style="font-size:14.5px;color:var(--ink-soft);margin-top:10px;">This reflection is completed in two parts, with short sections along the way. There are no right or wrong answers — simply choose the response that feels closest to your experience right now.<br><br><b>Answer for where you are now, rather than where you think you should be.</b></p>
 
@@ -593,7 +630,7 @@ function buildDomains(container, sections, prefix){
 
     const scaleReminder = document.createElement('div');
     scaleReminder.className = 'scale-reminder';
-    scaleReminder.textContent = '0 Not at all · 1 A little · 2 Quite a lot · 3 Very much';
+    scaleReminder.innerHTML = '<span><b>0</b> = Not at all</span><span><b>1</b> = A little</span><span><b>2</b> = Quite a lot</span><span><b>3</b> = Very much</span>';
     domain.appendChild(scaleReminder);
     sec.q.forEach(text => {
       qIndex++;
