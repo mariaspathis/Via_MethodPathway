@@ -2,5 +2,23 @@
   "name": "spathis-via-method-mapping",
   "version": "1.0.0",
   "private": true,
-  "description": "Via Method Mapping reflection tool with on-screen pathway guidance and client-controlled email sharing."
+  "description": "Via Method Mapping reflection tool with on-screen pathway guidance and client-controlled email sharing.",
+  "main": "pathway_logic.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mariaspathis/Via_MethodPathway.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mariaspathis/Via_MethodPathway/issues"
+  },
+  "homepage": "https://github.com/mariaspathis/Via_MethodPathway#readme",
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1"
+  }
 }
